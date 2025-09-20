@@ -144,9 +144,9 @@ export default function SignUpPage() {
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona el tipo de cuenta" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USER">Quiero adoptar una mascota</SelectItem>
-                  <SelectItem value="OWNER">Quiero dar en adopción</SelectItem>
+                <SelectContent className="bg-white border-gray-200 shadow-lg">
+                  <SelectItem value="USER" className="bg-white hover:bg-gray-50">Quiero adoptar una mascota</SelectItem>
+                  <SelectItem value="OWNER" className="bg-white hover:bg-gray-50">Quiero dar en adopción</SelectItem>
                 </SelectContent>
               </Select>
             </div>
