@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
+import { getCurrentUser } from "@/lib/jwt-auth";
 
 const testUsers = [
   {
@@ -28,6 +29,22 @@ const testUsers = [
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar autenticación y rol de administrador
+    const user = await getCurrentUser(request);
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: "No autorizado. Se requiere autenticación." },
+        { status: 401 }
+      );
+    }
+
+    if (user.role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Acceso denegado. Solo los administradores pueden crear usuarios de prueba." },
+        { status: 403 }
+      );
+    }
     const results = [];
     
     for (const userData of testUsers) {

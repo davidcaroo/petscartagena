@@ -47,7 +47,7 @@ export default function SignInPage() {
       if (result.success) {
         // Get the callback URL from search params or redirect based on user role
         const callbackUrl = searchParams.get("callbackUrl");
-        
+
         if (callbackUrl) {
           router.push(callbackUrl);
         } else {
@@ -128,11 +128,6 @@ export default function SignInPage() {
               ¿No tienes una cuenta?{" "}
               <Link href="/auth/signup" className="text-orange-600 hover:text-orange-700">
                 Regístrate aquí
-              </Link>
-            </p>
-            <p className="text-sm text-center text-gray-600">
-              <Link href="/test-users" className="text-blue-600 hover:text-blue-700">
-                Crear usuarios de prueba
               </Link>
             </p>
           </CardFooter>

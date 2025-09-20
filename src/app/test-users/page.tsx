@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function TestUsersPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { user, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && (!user || user.role !== "ADMIN")) {
+      router.push("/auth/signin");
+      return;
+    }
+  }, [user, authLoading, router]);
 
   const createTestUsers = async () => {
     setIsLoading(true);
@@ -15,6 +26,9 @@ export default function TestUsersPage() {
     try {
       const response = await fetch("/api/test-users/create", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
       });
 
       const data = await response.json();
@@ -30,6 +44,20 @@ export default function TestUsersPage() {
       setIsLoading(false);
     }
   };
+
+  // Mostrar loading mientras se verifica la autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
+
+  // Si no es admin, no mostrar nada (el useEffect redirigirá)
+  if (!user || user.role !== "ADMIN") {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
