@@ -81,10 +81,11 @@ const genderTranslations = {
 };
 
 export default function AdoptPage() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, token } = useAuth();
   const router = useRouter();
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState({
     type: "ALL",
     size: "ALL",
@@ -96,7 +97,10 @@ export default function AdoptPage() {
 
   useEffect(() => {
     loadPets();
-  }, []);
+    if (user && token) {
+      loadFavorites();
+    }
+  }, [user, token]);
 
   useEffect(() => {
     loadPets();
@@ -122,6 +126,68 @@ export default function AdoptPage() {
       console.error("Error loading pets:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadFavorites = async () => {
+    try {
+      const response = await fetch("/api/favorites", {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        const favoritesData = await response.json();
+        const favoriteIds = new Set(favoritesData.map((fav: any) => fav.petId as string));
+        setFavorites(favoriteIds);
+      }
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+    }
+  };
+
+  const toggleFavorite = async (petId: string) => {
+    if (!user || !token) {
+      router.push("/auth/signin");
+      return;
+    }
+
+    try {
+      const isFavorite = favorites.has(petId);
+      
+      if (isFavorite) {
+        // Quitar de favoritos
+        const response = await fetch(`/api/favorites?petId=${petId}`, {
+          method: "DELETE",
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          setFavorites(prev => {
+            const newFavorites = new Set(prev);
+            newFavorites.delete(petId);
+            return newFavorites;
+          });
+        }
+      } else {
+        // Agregar a favoritos
+        const response = await fetch("/api/favorites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ petId })
+        });
+        
+        if (response.ok) {
+          setFavorites(prev => new Set([...prev, petId]));
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
     }
   };
 
@@ -373,6 +439,29 @@ export default function AdoptPage() {
                         <IconComponent className="w-16 h-16 text-gray-400" />
                       </div>
                     )}
+                    
+                    {/* Favorite Heart Button */}
+                    <div className="absolute top-3 left-3">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(pet.id);
+                        }}
+                        className={`p-2 rounded-full transition-all duration-200 ${
+                          favorites.has(pet.id)
+                            ? 'bg-red-500 text-white shadow-lg'
+                            : 'bg-white/80 text-gray-600 hover:bg-red-50 hover:text-red-500'
+                        }`}
+                      >
+                        <Heart
+                          className={`w-5 h-5 ${
+                            favorites.has(pet.id) ? 'fill-current' : ''
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    
+                    {/* Disponible Badge */}
                     <div className="absolute top-3 right-3">
                       <Badge className="bg-green-500">
                         Disponible

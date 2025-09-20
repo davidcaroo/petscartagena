@@ -34,6 +34,7 @@ model User {
   chatsAsUser1  Chat[]     @relation("ChatUser1")
   chatsAsUser2  Chat[]     @relation("ChatUser2")
   adoptionRequests AdoptionRequest[]
+  favorites     Favorite[]
   
   @@map("users")
 }
@@ -60,6 +61,7 @@ model Pet {
   owner           User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   images          PetImage[]
   adoptionRequests AdoptionRequest[]
+  favorites       Favorite[]
   
   @@map("pets")
 }
@@ -123,8 +125,22 @@ model AdoptionRequest {
   pet         Pet               @relation(fields: [petId], references: [id], onDelete: Cascade)
   user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  @@unique([petId, userId])
   @@map("adoption_requests")
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  petId     String
+  createdAt DateTime @default(now())
+  
+  // Relaciones
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  
+  // Índice único para evitar duplicados
+  @@unique([userId, petId])
+  @@map("favorites")
 }
 
 enum UserRole {

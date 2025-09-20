@@ -28,6 +28,7 @@ interface DashboardStats {
   totalUsers: number;
   totalChats: number;
   unreadMessages: number;
+  favoriteCount: number;
 }
 
 interface UserPet {
@@ -107,10 +108,29 @@ export default function DashboardPage() {
               }
             }
 
+            // Load favorites count for USER role
+            let favCount = 0;
+            if (user?.role === "USER") {
+              try {
+                const favoritesResponse = await fetch("/api/favorites", {
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  }
+                });
+                if (favoritesResponse.ok) {
+                  const favoritesData = await favoritesResponse.json();
+                  favCount = favoritesData.length;
+                }
+              } catch (error) {
+                console.error("Error loading favorites count:", error);
+              }
+            }
+
             setStats(prev => ({
               ...prev,
               totalChats: chatsData.length,
               unreadMessages: unreadCount,
+              favoriteCount: favCount,
               totalPets: prev?.totalPets || 0,
               totalAdoptions: prev?.totalAdoptions || 0,
               totalUsers: prev?.totalUsers || 0
@@ -314,14 +334,17 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-orange-50 border-orange-200">
+                <Card 
+                  className="bg-orange-50 border-orange-200 cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => router.push("/my-favorites")}
+                >
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-4">
                       <div className="p-3 bg-orange-500 rounded-lg">
                         <Heart className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-orange-700">3</p>
+                        <p className="text-2xl font-bold text-orange-700">{stats?.favoriteCount || 0}</p>
                         <p className="text-sm text-orange-600">Mascotas Favoritas</p>
                       </div>
                     </div>
