@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -43,6 +43,34 @@ export default function AdoptPetButton({
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [hasRequested, setHasRequested] = useState(false);
+    const [checkingStatus, setCheckingStatus] = useState(false);
+
+    // Verificar estado inicial al cargar el componente
+    useEffect(() => {
+        if (user && petId) {
+            checkAdoptionStatus();
+        }
+    }, [user, petId]);
+
+    const checkAdoptionStatus = async () => {
+        if (!user) return;
+
+        try {
+            setCheckingStatus(true);
+            const response = await fetch(`/api/pets/${petId}/adopt`);
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.hasActiveRequest) {
+                    setHasRequested(true);
+                }
+            }
+        } catch (error) {
+            console.error('Error checking adoption status:', error);
+        } finally {
+            setCheckingStatus(false);
+        }
+    };
 
     const handleAdoptRequest = async () => {
         if (!message.trim()) {
@@ -66,18 +94,55 @@ export default function AdoptPetButton({
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Error al enviar solicitud');
+                // Manejar diferentes tipos de errores con mensajes específicos
+                if (response.status === 400) {
+                    if (data.error.includes("solicitud pendiente")) {
+                        toast.warning("Ya tienes una solicitud pendiente para esta mascota. Por favor espera la respuesta del dueño.");
+                        setHasRequested(true); // Marcar como ya solicitado
+                        setIsOpen(false);
+                        return;
+                    } else if (data.error.includes("ya has adoptado")) {
+                        toast.info("Ya has adoptado esta mascota anteriormente.");
+                        setHasRequested(true);
+                        setIsOpen(false);
+                        return;
+                    } else if (data.error.includes("no está disponible")) {
+                        toast.error("Esta mascota ya no está disponible para adopción.");
+                        setIsOpen(false);
+                        return;
+                    } else if (data.error.includes("tu propia mascota")) {
+                        toast.error("No puedes adoptar tu propia mascota.");
+                        setIsOpen(false);
+                        return;
+                    }
+                } else if (response.status === 401) {
+                    toast.error("Debes iniciar sesión para adoptar una mascota.");
+                    setIsOpen(false);
+                    return;
+                } else if (response.status === 403) {
+                    toast.error("No tienes permisos para realizar esta acción.");
+                    setIsOpen(false);
+                    return;
+                } else if (response.status === 404) {
+                    toast.error("La mascota no fue encontrada.");
+                    setIsOpen(false);
+                    return;
+                }
+
+                // Error genérico para otros casos
+                toast.error(data.error || 'Error al enviar la solicitud');
+                return;
             }
 
             // Éxito
-            toast.success(data.message || "¡Solicitud enviada exitosamente!");
+            toast.success(data.message || "🎉 ¡Solicitud de adopción enviada exitosamente!");
             setHasRequested(true);
             setIsOpen(false);
             setMessage("");
 
         } catch (error: any) {
             console.error('Error:', error);
-            toast.error(error.message || "Error al enviar la solicitud");
+            toast.error("Error de conexión. Por favor intenta de nuevo.");
         } finally {
             setIsLoading(false);
         }
@@ -104,6 +169,21 @@ export default function AdoptPetButton({
             >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Solicitud Enviada
+            </Button>
+        );
+    }
+
+    // Si está verificando el estado inicial
+    if (checkingStatus) {
+        return (
+            <Button
+                variant={variant}
+                size={size}
+                className={className}
+                disabled
+            >
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Verificando...
             </Button>
         );
     }

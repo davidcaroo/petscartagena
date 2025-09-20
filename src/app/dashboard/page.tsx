@@ -29,6 +29,8 @@ interface DashboardStats {
   totalChats: number;
   unreadMessages: number;
   favoriteCount: number;
+  myAdoptionRequests?: number;
+  pendingAdoptionRequests?: number;
 }
 
 interface UserPet {
@@ -110,6 +112,8 @@ export default function DashboardPage() {
 
             // Load favorites count for USER role
             let favCount = 0;
+            let adoptionRequestsCount = 0;
+            let pendingRequestsCount = 0;
             if (user?.role === "USER") {
               try {
                 const favoritesResponse = await fetch("/api/favorites", {
@@ -124,6 +128,22 @@ export default function DashboardPage() {
               } catch (error) {
                 console.error("Error loading favorites count:", error);
               }
+
+              // Load adoption requests count
+              try {
+                const adoptionsResponse = await fetch("/api/adoptions/my-requests", {
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  }
+                });
+                if (adoptionsResponse.ok) {
+                  const adoptionsData = await adoptionsResponse.json();
+                  adoptionRequestsCount = adoptionsData.length;
+                  pendingRequestsCount = adoptionsData.filter((req: any) => req.status === 'PENDING').length;
+                }
+              } catch (error) {
+                console.error("Error loading adoption requests count:", error);
+              }
             }
 
             setStats(prev => ({
@@ -131,6 +151,8 @@ export default function DashboardPage() {
               totalChats: chatsData.length,
               unreadMessages: unreadCount,
               favoriteCount: favCount,
+              myAdoptionRequests: adoptionRequestsCount,
+              pendingAdoptionRequests: pendingRequestsCount,
               totalPets: prev?.totalPets || 0,
               totalAdoptions: prev?.totalAdoptions || 0,
               totalUsers: prev?.totalUsers || 0
@@ -319,7 +341,7 @@ export default function DashboardPage() {
           <div className="space-y-8">
             {/* Stats Cards Row */}
             {stats && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card className="bg-purple-50 border-purple-200">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-4">
@@ -351,6 +373,28 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
+                <Card
+                  className="bg-red-50 border-red-200 cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => router.push("/my-adoptions")}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-red-500 rounded-lg">
+                        <TrendingUp className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-red-700">{stats?.myAdoptionRequests || 0}</p>
+                        <p className="text-sm text-red-600">Mis Solicitudes</p>
+                        {(stats?.pendingAdoptionRequests || 0) > 0 && (
+                          <Badge variant="destructive" className="text-xs mt-1">
+                            {stats?.pendingAdoptionRequests} pendientes
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <Card className="bg-blue-50 border-blue-200">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-4">
@@ -368,7 +412,7 @@ export default function DashboardPage() {
             )}
 
             {/* Main Action Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {/* Adoptar una Mascota Card */}
               <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-orange-300"
                 onClick={() => router.push("/adopt")}>
@@ -385,6 +429,32 @@ export default function DashboardPage() {
                     </div>
                     <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium">
                       Ver Mascotas Disponibles
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Mis Solicitudes Card */}
+              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-red-300"
+                onClick={() => router.push("/my-adoptions")}>
+                <CardContent className="p-8">
+                  <div className="text-center space-y-6">
+                    <div className="mx-auto w-16 h-16 bg-red-500 rounded-full flex items-center justify-center group-hover:bg-red-600 transition-colors">
+                      <TrendingUp className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Mis Solicitudes</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Revisa el estado de todas tus solicitudes de adopción
+                      </p>
+                    </div>
+                    <Button className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium flex items-center justify-center">
+                      Ver Mis Solicitudes
+                      {(stats?.myAdoptionRequests || 0) > 0 && (
+                        <Badge variant="secondary" className="ml-2 bg-white text-red-500">
+                          {stats?.myAdoptionRequests}
+                        </Badge>
+                      )}
                     </Button>
                   </div>
                 </CardContent>

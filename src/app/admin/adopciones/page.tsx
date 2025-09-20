@@ -429,43 +429,43 @@ export default function AdoptionsPage() {
         );
     }
 
-  return (
-    <AdminLayout 
-      title="Gestión de Adopciones" 
-      description="Administra las solicitudes de adopción de mascotas"
-    >
-      {/* Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-        <StatsCard
-          title="Total"
-          value={stats.total}
-          icon={Heart}
-        />
-        <StatsCard
-          title="Pendientes"
-          value={stats.pending}
-          icon={Clock}
-          className="border-orange-200"
-        />
-        <StatsCard
-          title="Aprobadas"
-          value={stats.accepted}
-          icon={CheckCircle}
-          className="border-green-200"
-        />
-        <StatsCard
-          title="Rechazadas"
-          value={stats.rejected}
-          icon={XCircle}
-          className="border-red-200"
-        />
-        <StatsCard
-          title="Canceladas"
-          value={stats.cancelled}
-          icon={Ban}
-          className="border-gray-200"
-        />
-      </div>            {/* Filtros y búsqueda */}
+    return (
+        <AdminLayout
+            title="Gestión de Adopciones"
+            description="Administra las solicitudes de adopción de mascotas"
+        >
+            {/* Estadísticas */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <StatsCard
+                    title="Total"
+                    value={stats.total}
+                    icon={Heart}
+                />
+                <StatsCard
+                    title="Pendientes"
+                    value={stats.pending}
+                    icon={Clock}
+                    className="border-orange-200"
+                />
+                <StatsCard
+                    title="Aprobadas"
+                    value={stats.accepted}
+                    icon={CheckCircle}
+                    className="border-green-200"
+                />
+                <StatsCard
+                    title="Rechazadas"
+                    value={stats.rejected}
+                    icon={XCircle}
+                    className="border-red-200"
+                />
+                <StatsCard
+                    title="Canceladas"
+                    value={stats.cancelled}
+                    icon={Ban}
+                    className="border-gray-200"
+                />
+            </div>            {/* Filtros y búsqueda */}
             <Card className="mb-6">
                 <CardContent className="p-4">
                     <div className="flex flex-col md:flex-row gap-4">
