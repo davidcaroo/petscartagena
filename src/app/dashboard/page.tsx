@@ -284,16 +284,6 @@ export default function DashboardPage() {
         {/* Enhanced User Dashboard for Adopters */}
         {user.role === "USER" && (
           <div className="space-y-8">
-            {/* Welcome Header */}
-            <div className="text-center space-y-2">
-              <h1 className="text-3xl font-bold text-gray-900">
-                ¡Bienvenido, {user.name}!
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Gestiona tu cuenta y encuentra el compañero perfecto
-              </p>
-            </div>
-
             {/* Stats Cards Row */}
             {stats && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -344,8 +334,8 @@ export default function DashboardPage() {
             {/* Main Action Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {/* Adoptar una Mascota Card */}
-              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-orange-300" 
-                    onClick={() => router.push("/adopt")}>
+              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-orange-300"
+                onClick={() => router.push("/adopt")}>
                 <CardContent className="p-8">
                   <div className="text-center space-y-6">
                     <div className="mx-auto w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center group-hover:bg-orange-600 transition-colors">
@@ -365,8 +355,8 @@ export default function DashboardPage() {
               </Card>
 
               {/* Mensajes Card */}
-              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-purple-300" 
-                    onClick={() => router.push("/messages")}>
+              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-purple-300"
+                onClick={() => router.push("/messages")}>
                 <CardContent className="p-8">
                   <div className="text-center space-y-6">
                     <div className="mx-auto w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center group-hover:bg-purple-600 transition-colors">
@@ -478,63 +468,63 @@ export default function DashboardPage() {
                     </Button>
                   </CardContent>
                 </Card>              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/messages")}>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <MessageCircle className="w-5 h-5 text-purple-500" />
-                    <span>Mensajes</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Revisa y responde los mensajes de adopción
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-purple-500 hover:bg-purple-600">
-                    Ver Mensajes ({stats?.totalChats || 0})
-                  </Button>
-                </CardContent>
-              </Card>
-            </>
-          )}
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <MessageCircle className="w-5 h-5 text-purple-500" />
+                      <span>Mensajes</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Revisa y responde los mensajes de adopción
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="w-full bg-purple-500 hover:bg-purple-600">
+                      Ver Mensajes ({stats?.totalChats || 0})
+                    </Button>
+                  </CardContent>
+                </Card>
+              </>
+            )}
 
-          {/* Admin Actions */}
-          {user.role === "ADMIN" && (
-            <>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/users")}>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-purple-500" />
-                    <span>Gestionar Usuarios</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Administra todos los usuarios de la plataforma
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-purple-500 hover:bg-purple-600">
-                    Ver Usuarios
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* Admin Actions */}
+            {user.role === "ADMIN" && (
+              <>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/users")}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Users className="w-5 h-5 text-purple-500" />
+                      <span>Gestionar Usuarios</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Administra todos los usuarios de la plataforma
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="w-full bg-purple-500 hover:bg-purple-600">
+                      Ver Usuarios
+                    </Button>
+                  </CardContent>
+                </Card>
 
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/pets")}>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Heart className="w-5 h-5 text-red-500" />
-                    <span>Gestionar Mascotas</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Administra todas las mascotas registradas
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-red-500 hover:bg-red-600">
-                    Ver Mascotas
-                  </Button>
-                </CardContent>
-              </Card>
-            </>
-          )}
-        </div>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/pets")}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Heart className="w-5 h-5 text-red-500" />
+                      <span>Gestionar Mascotas</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Administra todas las mascotas registradas
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="w-full bg-red-500 hover:bg-red-600">
+                      Ver Mascotas
+                    </Button>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
         )}
 
         {/* User's Pets (for Owners) */}
