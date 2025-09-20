@@ -27,6 +27,7 @@ interface DashboardStats {
   totalAdoptions: number;
   totalUsers: number;
   totalChats: number;
+  unreadMessages: number;
 }
 
 interface UserPet {
@@ -95,9 +96,21 @@ export default function DashboardPage() {
           });
           if (chatsResponse.ok) {
             const chatsData = await chatsResponse.json();
+
+            // For now, count unread messages as messages where the last message was not sent by current user
+            let unreadCount = 0;
+            if (chatsData && chatsData.length > 0) {
+              for (const chat of chatsData) {
+                if (chat.lastMessage && chat.lastMessage.senderId !== user.id) {
+                  unreadCount++;
+                }
+              }
+            }
+
             setStats(prev => ({
               ...prev,
               totalChats: chatsData.length,
+              unreadMessages: unreadCount,
               totalPets: prev?.totalPets || 0,
               totalAdoptions: prev?.totalAdoptions || 0,
               totalUsers: prev?.totalUsers || 0
@@ -322,7 +335,7 @@ export default function DashboardPage() {
                         <Users className="h-6 w-6 text-white" />
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-blue-700">1</p>
+                        <p className="text-2xl font-bold text-blue-700">{stats?.unreadMessages || 0}</p>
                         <p className="text-sm text-blue-600">Mensajes Pendientes</p>
                       </div>
                     </div>
