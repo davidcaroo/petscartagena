@@ -281,8 +281,115 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* Enhanced User Dashboard for Adopters */}
+        {user.role === "USER" && (
+          <div className="space-y-8">
+            {/* Welcome Header */}
+            <div className="text-center space-y-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                ¡Bienvenido, {user.name}!
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Gestiona tu cuenta y encuentra el compañero perfecto
+              </p>
+            </div>
+
+            {/* Stats Cards Row */}
+            {stats && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="bg-purple-50 border-purple-200">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-purple-500 rounded-lg">
+                        <MessageCircle className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-purple-700">{stats?.totalChats || 0}</p>
+                        <p className="text-sm text-purple-600">Conversaciones</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-orange-50 border-orange-200">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-orange-500 rounded-lg">
+                        <Heart className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-orange-700">3</p>
+                        <p className="text-sm text-orange-600">Mascotas Favoritas</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-blue-500 rounded-lg">
+                        <Users className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-blue-700">1</p>
+                        <p className="text-sm text-blue-600">Mensajes Pendientes</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Main Action Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Adoptar una Mascota Card */}
+              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-orange-300" 
+                    onClick={() => router.push("/adopt")}>
+                <CardContent className="p-8">
+                  <div className="text-center space-y-6">
+                    <div className="mx-auto w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center group-hover:bg-orange-600 transition-colors">
+                      <Heart className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Adoptar una Mascota</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Explora las mascotas disponibles y encuentra tu compañero perfecto
+                      </p>
+                    </div>
+                    <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium">
+                      Ver Mascotas Disponibles
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Mensajes Card */}
+              <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-purple-300" 
+                    onClick={() => router.push("/messages")}>
+                <CardContent className="p-8">
+                  <div className="text-center space-y-6">
+                    <div className="mx-auto w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center group-hover:bg-purple-600 transition-colors">
+                      <MessageCircle className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Mensajes</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Revisa las respuestas de los dueños de mascotas
+                      </p>
+                    </div>
+                    <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-medium">
+                      Ver Mensajes ({stats?.totalChats || 0})
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
         {/* User Dashboard - Simple stats for Adopters */}
-        {user.role === "USER" && stats && (
+        {user.role === "USER" && false && stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -290,7 +397,7 @@ export default function DashboardPage() {
                 <MessageCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalChats}</div>
+                <div className="text-2xl font-bold">{stats?.totalChats || 0}</div>
                 <p className="text-xs text-muted-foreground">
                   Chats con dueños de mascotas
                 </p>
@@ -314,84 +421,63 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Common Actions */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/adopt")}>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Heart className="w-5 h-5 text-orange-500" />
-                <span>Adoptar una Mascota</span>
-              </CardTitle>
-              <CardDescription>
-                Explora las mascotas disponibles y encuentra tu compañero perfecto
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full bg-orange-500 hover:bg-orange-600">
-                Ver Mascotas Disponibles
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* User Actions - Messages for Adopters */}
-          {user.role === "USER" && (
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/messages")}>
+        {/* Action Cards - Only for OWNER and ADMIN */}
+        {user.role !== "USER" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Common Actions */}
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/adopt")}>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <MessageCircle className="w-5 h-5 text-purple-500" />
-                  <span>Mensajes</span>
+                  <Heart className="w-5 h-5 text-orange-500" />
+                  <span>Adoptar una Mascota</span>
                 </CardTitle>
                 <CardDescription>
-                  Revisa las respuestas de los dueños de mascotas
+                  Explora las mascotas disponibles y encuentra tu compañero perfecto
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full bg-purple-500 hover:bg-purple-600">
-                  Ver Mensajes ({stats?.totalChats || 0})
+                <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                  Ver Mascotas Disponibles
                 </Button>
               </CardContent>
             </Card>
-          )}
 
-          {/* Owner Actions */}
-          {user.role === "OWNER" && (
-            <>
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/give-adoption")}>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Plus className="w-5 h-5 text-green-500" />
-                    <span>Registrar Mascota</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Añade una nueva mascota para dar en adopción
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-green-500 hover:bg-green-600">
-                    Nueva Mascota
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* Owner Actions */}
+            {user.role === "OWNER" && (
+              <>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/give-adoption")}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Plus className="w-5 h-5 text-green-500" />
+                      <span>Registrar Mascota</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Añade una nueva mascota para dar en adopción
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="w-full bg-green-500 hover:bg-green-600">
+                      Nueva Mascota
+                    </Button>
+                  </CardContent>
+                </Card>
 
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/my-pets")}>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Home className="w-5 h-5 text-blue-500" />
-                    <span>Mis Mascotas</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Gestiona las mascotas que has registrado
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-blue-500 hover:bg-blue-600">
-                    Ver Mis Mascotas ({userPets.length})
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/messages")}>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/my-pets")}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Home className="w-5 h-5 text-blue-500" />
+                      <span>Mis Mascotas</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Gestiona las mascotas que has registrado
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                      Ver Mis Mascotas ({userPets.length})
+                    </Button>
+                  </CardContent>
+                </Card>              <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/messages")}>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <MessageCircle className="w-5 h-5 text-purple-500" />
@@ -449,6 +535,7 @@ export default function DashboardPage() {
             </>
           )}
         </div>
+        )}
 
         {/* User's Pets (for Owners) */}
         {user.role === "OWNER" && userPets.length > 0 && (
