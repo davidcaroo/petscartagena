@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/jwt-auth";
+import { ActivityLogger } from "@/lib/activity-logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,12 +69,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Create adoption request if it doesn't exist
-    const existingRequest = await db.adoptionRequest.findUnique({
+    const existingRequest = await db.adoptionRequest.findFirst({
       where: {
-        petId_userId: {
-          petId: petId,
-          userId: user.id
-        }
+        petId: petId,
+        userId: user.id
       }
     });
 
@@ -85,6 +84,28 @@ export async function POST(request: NextRequest) {
           status: "PENDING"
         }
       });
+
+      // Obtener información adicional para el log
+      const otherUser = await db.user.findUnique({
+        where: { id: userId },
+        select: { name: true }
+      });
+
+      // Log adoption request activity
+      await ActivityLogger.adoptionRequested(
+        user.id, 
+        user.name || 'Usuario', 
+        pet.name, 
+        userId
+      );
+
+      // Log chat started activity
+      await ActivityLogger.chatStarted(
+        user.id,
+        user.name || 'Usuario',
+        otherUser?.name || 'Usuario',
+        pet.name
+      );
     }
 
     return NextResponse.json({ 

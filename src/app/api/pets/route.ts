@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/jwt-auth";
 import { writeFile } from "fs/promises";
 import path from "path";
 import { PetType, PetSize, PetGender } from "@prisma/client";
+import { ActivityLogger } from "@/lib/activity-logger";
 
 export const POST = requireRole('OWNER')(async (request: NextRequest, user) => {
   try {
@@ -86,6 +87,9 @@ export const POST = requireRole('OWNER')(async (request: NextRequest, user) => {
         }
       }
     });
+
+    // Log the activity
+    await ActivityLogger.petRegistered(user.id, petData.name, petData.type, petData.breed || undefined);
 
     return NextResponse.json(createdPet, { status: 201 });
   } catch (error) {

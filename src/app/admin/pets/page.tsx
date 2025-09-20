@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Heart, 
-  Search, 
+import {
+  Heart,
+  Search,
   Plus,
   Trash2,
   Edit,
@@ -22,7 +22,7 @@ import {
   MapPin,
   User
 } from "lucide-react";
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -44,6 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
+import AdminLayout from "@/components/admin/AdminLayout";
 
 interface Pet {
   id: string;
@@ -101,7 +102,7 @@ export default function AdminPetsPage() {
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(pet => 
+      filtered = filtered.filter(pet =>
         statusFilter === "available" ? pet.isAvailable : !pet.isAvailable
       );
     }
@@ -170,7 +171,7 @@ export default function AdminPetsPage() {
       });
 
       if (response.ok) {
-        setPets(prev => prev.map(pet => 
+        setPets(prev => prev.map(pet =>
           pet.id === petId ? { ...pet, isAvailable: !currentStatus } : pet
         ));
       } else {
@@ -270,7 +271,7 @@ export default function AdminPetsPage() {
         <div className="container mx-auto max-w-7xl px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <button 
+              <button
                 onClick={() => router.back()}
                 className="p-2 hover:bg-gray-100 rounded-lg"
               >
@@ -302,7 +303,7 @@ export default function AdminPetsPage() {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Disponibles</CardTitle>
@@ -317,7 +318,7 @@ export default function AdminPetsPage() {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Adoptadas</CardTitle>
@@ -332,7 +333,7 @@ export default function AdminPetsPage() {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Perros</CardTitle>
@@ -368,7 +369,7 @@ export default function AdminPetsPage() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Estado" />
@@ -433,9 +434,9 @@ export default function AdminPetsPage() {
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                            {pet.images.length > 0 ? (
-                              <img 
-                                src={pet.images[0].url} 
+                            {pet.images && pet.images.length > 0 ? (
+                              <img
+                                src={pet.images[0].url}
                                 alt={pet.name}
                                 className="w-full h-full object-cover"
                               />
@@ -489,11 +490,11 @@ export default function AdminPetsPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           variant={pet.isAvailable ? "default" : "secondary"}
                           className={
-                            pet.isAvailable 
-                              ? "bg-green-100 text-green-800 hover:bg-green-200" 
+                            pet.isAvailable
+                              ? "bg-green-100 text-green-800 hover:bg-green-200"
                               : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                           }
                         >
@@ -531,7 +532,7 @@ export default function AdminPetsPage() {
                                 </>
                               )}
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => deletePet(pet.id)}
                               className="text-red-600"
                             >
@@ -546,7 +547,7 @@ export default function AdminPetsPage() {
                 </TableBody>
               </Table>
             </div>
-            
+
             {filteredPets.length === 0 && (
               <div className="text-center py-8">
                 <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />

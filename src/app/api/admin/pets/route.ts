@@ -10,7 +10,13 @@ export const GET = requireRole('ADMIN')(async (request: NextRequest, user) => {
           select: {
             id: true,
             name: true,
-            email: true
+            email: true,
+            city: true
+          }
+        },
+        images: {
+          select: {
+            url: true
           }
         }
       },

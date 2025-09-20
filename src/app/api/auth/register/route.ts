@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
+import { ActivityLogger } from "@/lib/activity-logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,6 +48,9 @@ export async function POST(request: NextRequest) {
         createdAt: true,
       }
     });
+
+    // Log the activity
+    await ActivityLogger.userRegistered(user.id, user.name || 'Usuario', user.email);
 
     return NextResponse.json({
       message: "Usuario creado exitosamente",

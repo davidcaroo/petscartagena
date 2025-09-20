@@ -24,6 +24,9 @@ model User {
   role          UserRole  @default(USER)
   avatar        String?
   bio           String?
+  emailVerified Boolean   @default(false)
+  verificationToken String?
+  verificationTokenExpires DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
@@ -35,6 +38,7 @@ model User {
   chatsAsUser2  Chat[]     @relation("ChatUser2")
   adoptionRequests AdoptionRequest[]
   favorites     Favorite[]
+  activities    Activity[]
   
   @@map("users")
 }
@@ -177,4 +181,58 @@ enum AdoptionStatus {
   ACCEPTED
   REJECTED
   CANCELLED
+}
+
+model Setting {
+  id          String      @id @default(cuid())
+  key         String      @unique
+  value       String
+  type        SettingType
+  category    String
+  label       String
+  description String?
+  isPublic    Boolean     @default(false)
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  @@map("settings")
+}
+
+model Activity {
+  id          String         @id @default(cuid())
+  type        ActivityType
+  action      String
+  description String
+  metadata    String?        // JSON string para datos adicionales
+  userId      String?
+  user        User?          @relation(fields: [userId], references: [id])
+  createdAt   DateTime       @default(now())
+  
+  @@map("activities")
+}
+
+enum ActivityType {
+  USER_REGISTRATION
+  USER_VERIFICATION
+  PET_REGISTRATION
+  PET_ADOPTION_REQUEST
+  CHAT_STARTED
+  ADOPTION_APPROVED
+  ADOPTION_REJECTED
+  ADMIN_ACTION
+  SYSTEM_EVENT
+}
+
+enum SettingType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  EMAIL
+  URL
+  COLOR
+  JSON
+  FILE
+  TEXTAREA
+  SELECT
 }

@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Setup fetch interceptor to add auth header
     const originalFetch = window.fetch;
-    window.fetch = async function(input: RequestInfo | URL, init?: RequestInit) {
+    window.fetch = async function (input: RequestInfo | URL, init?: RequestInit) {
       const authToken = localStorage.getItem('auth_token');
       if (authToken) {
         const headers = new Headers(init?.headers);
@@ -108,13 +108,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data.user);
         setToken(data.token);
         localStorage.setItem('auth_token', data.token);
-        
+
         // Set token in cookie for middleware access
         document.cookie = `auth_token=${data.token}; path=/; max-age=604800; sameSite=strict`;
-        
+
         return { success: true, user: data.user };
       } else {
-        return { success: false, error: data.error || 'Login failed' };
+        return {
+          success: false,
+          error: data.message || data.error || 'Login failed',
+          errorType: data.error,
+          userEmail: data.userEmail
+        };
       }
     } catch (error) {
       console.error('Login error:', error);

@@ -23,6 +23,7 @@ import {
   Crown
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AdoptPetButton from "@/components/AdoptPetButton";
 
 interface Pet {
   id: string;
@@ -154,7 +155,7 @@ export default function AdoptPage() {
 
     try {
       const isFavorite = favorites.has(petId);
-      
+
       if (isFavorite) {
         // Quitar de favoritos
         const response = await fetch(`/api/favorites?petId=${petId}`, {
@@ -163,7 +164,7 @@ export default function AdoptPage() {
             'Authorization': `Bearer ${token}`
           }
         });
-        
+
         if (response.ok) {
           setFavorites(prev => {
             const newFavorites = new Set(prev);
@@ -181,7 +182,7 @@ export default function AdoptPage() {
           },
           body: JSON.stringify({ petId })
         });
-        
+
         if (response.ok) {
           setFavorites(prev => new Set([...prev, petId]));
         }
@@ -439,7 +440,7 @@ export default function AdoptPage() {
                         <IconComponent className="w-16 h-16 text-gray-400" />
                       </div>
                     )}
-                    
+
                     {/* Favorite Heart Button */}
                     <div className="absolute top-3 left-3">
                       <button
@@ -447,20 +448,18 @@ export default function AdoptPage() {
                           e.stopPropagation();
                           toggleFavorite(pet.id);
                         }}
-                        className={`p-2 rounded-full transition-all duration-200 ${
-                          favorites.has(pet.id)
-                            ? 'bg-red-500 text-white shadow-lg'
-                            : 'bg-white/80 text-gray-600 hover:bg-red-50 hover:text-red-500'
-                        }`}
+                        className={`p-2 rounded-full transition-all duration-200 ${favorites.has(pet.id)
+                          ? 'bg-red-500 text-white shadow-lg'
+                          : 'bg-white/80 text-gray-600 hover:bg-red-50 hover:text-red-500'
+                          }`}
                       >
                         <Heart
-                          className={`w-5 h-5 ${
-                            favorites.has(pet.id) ? 'fill-current' : ''
-                          }`}
+                          className={`w-5 h-5 ${favorites.has(pet.id) ? 'fill-current' : ''
+                            }`}
                         />
                       </button>
                     </div>
-                    
+
                     {/* Disponible Badge */}
                     <div className="absolute top-3 right-3">
                       <Badge className="bg-green-500">
@@ -532,14 +531,27 @@ export default function AdoptPage() {
                         </div>
                       </div>
 
-                      <Button
-                        size="sm"
-                        onClick={() => contactOwner(pet.id, pet.owner.id)}
-                        className="bg-orange-500 hover:bg-orange-600"
-                      >
-                        <MessageCircle className="w-4 h-4 mr-1" />
-                        Contactar
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <AdoptPetButton
+                          petId={pet.id}
+                          petName={pet.name}
+                          petType={pet.type}
+                          isAvailable={pet.isAvailable}
+                          ownerName={pet.owner.name}
+                          variant="outline"
+                          size="sm"
+                          className="bg-red-500 hover:bg-red-600 text-white border-red-500"
+                        />
+
+                        <Button
+                          size="sm"
+                          onClick={() => contactOwner(pet.id, pet.owner.id)}
+                          className="bg-orange-500 hover:bg-orange-600"
+                        >
+                          <MessageCircle className="w-4 h-4 mr-1" />
+                          Contactar
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

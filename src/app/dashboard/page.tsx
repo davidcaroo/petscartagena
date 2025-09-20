@@ -334,7 +334,7 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                <Card 
+                <Card
                   className="bg-orange-50 border-orange-200 cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => router.push("/my-favorites")}
                 >

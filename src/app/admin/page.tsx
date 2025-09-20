@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Users, 
-  Heart, 
-  MessageCircle, 
+import {
+  Users,
+  Heart,
+  MessageCircle,
   TrendingUp,
   Shield,
   Settings,
@@ -20,7 +20,12 @@ import {
   CheckCircle,
   Clock,
   UserCheck,
-  UserX
+  UserX,
+  PawPrint,
+  Phone,
+  FileCheck,
+  FileX,
+  Activity
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -36,7 +41,7 @@ interface DashboardStats {
 
 interface RecentActivity {
   id: string;
-  type: 'user' | 'pet' | 'adoption';
+  type: 'user' | 'pet' | 'adoption' | 'chat' | 'system';
   action: string;
   description: string;
   timestamp: string;
@@ -61,6 +66,14 @@ export default function AdminDashboard() {
 
     if (user && token && user.role === "ADMIN") {
       loadDashboardData();
+
+      // Auto-refresh actividades cada 30 segundos
+      const interval = setInterval(() => {
+        console.log('🔄 Auto-refreshing activities...');
+        loadDashboardData();
+      }, 30000); // 30 segundos
+
+      return () => clearInterval(interval);
     }
   }, [user, token, isLoading, router]);
 
@@ -77,34 +90,22 @@ export default function AdminDashboard() {
         setStats(statsData);
       }
 
-      // Load recent activity (mock data for now)
-      setRecentActivity([
-        {
-          id: "1",
-          type: "user",
-          action: "Nuevo usuario",
-          description: "María García se registró como adoptante",
-          timestamp: "Hace 5 minutos",
-          user: {
-            name: "María García",
-            avatar: ""
-          }
-        },
-        {
-          id: "2",
-          type: "pet",
-          action: "Nueva mascota",
-          description: "Max (Labrador) registrado para adopción",
-          timestamp: "Hace 15 minutos"
-        },
-        {
-          id: "3",
-          type: "adoption",
-          action: "Solicitud de adopción",
-          description: "Juan Pérez quiere adoptar a Luna",
-          timestamp: "Hace 1 hora"
+      // Load recent activities - ahora datos reales
+      console.log('Fetching activities with token:', token ? 'Present' : 'Missing');
+      const activitiesResponse = await fetch("/api/admin/activities?limit=5", {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      ]);
+      });
+      console.log('Activities response status:', activitiesResponse.status);
+      if (activitiesResponse.ok) {
+        const activitiesData = await activitiesResponse.json();
+        console.log('Activities data:', activitiesData);
+        setRecentActivity(activitiesData);
+      } else {
+        const errorData = await activitiesResponse.text();
+        console.error('Activities error:', errorData);
+      }
 
       setLoading(false);
     } catch (error) {
@@ -150,9 +151,9 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
-                <img 
-                  src="/petscartagena-logo.png" 
-                  alt="PetsCartagena" 
+                <img
+                  src="/petscartagena-logo.png"
+                  alt="PetsCartagena"
                   className="w-8 h-8"
                 />
                 <span className="text-xl font-bold text-gray-900">PetsCartagena</span>
@@ -162,7 +163,7 @@ export default function AdminDashboard() {
                 <span className="text-sm font-medium text-purple-600">Panel de Administración</span>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <Avatar>
@@ -178,9 +179,9 @@ export default function AdminDashboard() {
                   </Badge>
                 </div>
               </div>
-              
-              <Button 
-                variant="ghost" 
+
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={logout}
               >
@@ -218,7 +219,7 @@ export default function AdminDashboard() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Usuarios</CardTitle>
@@ -231,7 +232,7 @@ export default function AdminDashboard() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Adopciones</CardTitle>
@@ -244,7 +245,7 @@ export default function AdminDashboard() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Chats Activos</CardTitle>
@@ -296,7 +297,7 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/adopciones")}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <CheckCircle className="w-5 h-5 text-green-500" />
@@ -309,6 +310,11 @@ export default function AdminDashboard() {
             <CardContent>
               <Button className="w-full bg-green-500 hover:bg-green-600">
                 Ver Solicitudes
+                {stats && stats.pendingAdoptions > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {stats.pendingAdoptions}
+                  </Badge>
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -324,9 +330,11 @@ export default function AdminDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-purple-500 hover:bg-purple-600">
-                Configurar
-              </Button>
+              <Link href="/admin/config">
+                <Button className="w-full bg-purple-500 hover:bg-purple-600">
+                  Configurar
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
@@ -346,8 +354,10 @@ export default function AdminDashboard() {
                   <div key={activity.id} className="flex items-start space-x-3">
                     <div className="flex-shrink-0">
                       {activity.type === 'user' && <UserCheck className="w-5 h-5 text-blue-500" />}
-                      {activity.type === 'pet' && <Heart className="w-5 h-5 text-red-500" />}
-                      {activity.type === 'adoption' && <Clock className="w-5 h-5 text-orange-500" />}
+                      {activity.type === 'pet' && <PawPrint className="w-5 h-5 text-green-500" />}
+                      {activity.type === 'adoption' && <Heart className="w-5 h-5 text-red-500" />}
+                      {activity.type === 'chat' && <MessageCircle className="w-5 h-5 text-purple-500" />}
+                      {activity.type === 'system' && <Activity className="w-5 h-5 text-gray-500" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
@@ -407,7 +417,7 @@ export default function AdminDashboard() {
                   Revisar Chats
                 </Button>
               </div>
-              
+
               <div className="pt-4 border-t">
                 <h4 className="font-medium text-gray-900 mb-3">Estadísticas Rápidas</h4>
                 <div className="space-y-2 text-sm">
