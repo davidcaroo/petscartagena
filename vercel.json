@@ -1,0 +1,17 @@
+{
+    "functions": {
+        "src/app/api/**/*.ts": {
+            "maxDuration": 10
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api/socketio",
+            "destination": "/api/socketio"
+        }
+    ],
+    "buildCommand": "npm run build",
+    "outputDirectory": ".next",
+    "framework": "nextjs",
+    "nodeVersion": "18.x"
+}

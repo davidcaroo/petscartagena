@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  phone         String?
+  address       String?
+  city          String?
+  role          UserRole  @default(USER)
+  avatar        String?
+  bio           String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relaciones
+  pets          Pet[]
+  sentMessages  Message[]  @relation("SentMessages")
+  receivedMessages Message[]  @relation("ReceivedMessages")
+  chatsAsUser1  Chat[]     @relation("ChatUser1")
+  chatsAsUser2  Chat[]     @relation("ChatUser2")
+  adoptionRequests AdoptionRequest[]
+  
+  @@map("users")
+}
+
+model Pet {
+  id              String      @id @default(cuid())
+  name            String
+  type            PetType
+  breed           String?
+  age             Int         // en meses
+  color           String?
+  size            PetSize?
+  gender          PetGender?
+  description     String?
+  favoriteFood    String?
+  favoriteToy     String?
+  medicalTreatment String?
+  isAvailable     Boolean     @default(true)
+  ownerId         String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  // Relaciones
+  owner           User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  images          PetImage[]
+  adoptionRequests AdoptionRequest[]
+  
+  @@map("pets")
+}
+
+model PetImage {
+  id      String @id @default(cuid())
+  url     String
+  petId   String
+  order   Int    @default(0)
+  
+  // Relaciones
+  pet     Pet    @relation(fields: [petId], references: [id], onDelete: Cascade)
+  
+  @@map("pet_images")
+}
+
+model Chat {
+  id        String   @id @default(cuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relaciones
+  user1     User     @relation("ChatUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User     @relation("ChatUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages  Message[]
+  
+  @@unique([user1Id, user2Id])
+  @@map("chats")
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  content   String
+  senderId  String
+  receiverId String
+  chatId    String
+  readAt    DateTime?   // Timestamp when message was read
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  // Relaciones
+  sender    User        @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver  User        @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  chat      Chat        @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  
+  @@map("messages")
+}
+
+model AdoptionRequest {
+  id          String            @id @default(cuid())
+  status      AdoptionStatus    @default(PENDING)
+  message     String?
+  petId       String
+  userId      String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  
+  // Relaciones
+  pet         Pet               @relation(fields: [petId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([petId, userId])
+  @@map("adoption_requests")
+}
+
+enum UserRole {
+  USER
+  OWNER
+  ADMIN
+}
+
+enum PetType {
+  DOG
+  CAT
+  RABBIT
+  BIRD
+  FISH
+  HAMSTER
+  TURTLE
+  OTHER
+}
+
+enum PetSize {
+  SMALL
+  MEDIUM
+  LARGE
+  EXTRA_LARGE
+}
+
+enum PetGender {
+  MALE
+  FEMALE
+}
+
+enum AdoptionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
