@@ -25,6 +25,15 @@ Plataforma de adopción de mascotas en Cartagena, Colombia, que conecta a person
 - **Estadísticas**: Dashboard con métricas de la plataforma (total de mascotas, adopciones, usuarios, chats)
 - **Moderación**: Gestión de usuarios y mascotas
 - **Gestión de Roles**: Control de permisos (USER, OWNER, ADMIN)
+- **Configuraciones Dinámicas**: Sistema de configuraciones de la empresa (email, teléfono, dirección, nombre de la plataforma)
+- **Configuraciones Públicas**: Control de qué configuraciones son visibles públicamente
+
+### Páginas Públicas e Información
+- **Página de Contacto**: Información de contacto dinámica basada en configuraciones del administrador
+- **Footer Dinámico**: Información de contacto actualizada automáticamente desde configuraciones
+- **Términos y Condiciones**: Página legal completa
+- **Preguntas Frecuentes**: FAQ interactiva con acordeón
+- **Guía de Adopción**: Proceso paso a paso para adoptar mascotas
 
 ## 🏗️ Arquitectura de la Aplicación
 
@@ -93,8 +102,13 @@ src/
 
 #### Panel de Administración
 - `GET /api/admin/stats` - Estadísticas del dashboard (requiere rol ADMIN)
+- `GET /api/admin/settings` - Obtener configuraciones del sistema (requiere rol ADMIN)
+- `PUT /api/admin/settings` - Actualizar configuraciones del sistema (requiere rol ADMIN)
 - `/api/admin/users/*` - Gestión de usuarios
 - `/api/admin/pets/*` - Gestión de mascotas
+
+#### Configuraciones Públicas
+- `GET /api/settings/public` - Obtener configuraciones públicas (sin autenticación)
 
 #### Utilidades
 - `GET /api/health` - Health check del servidor
@@ -134,11 +148,27 @@ src/
 - **Dashboard Principal**: Métricas y estadísticas en tiempo real
 - **Gestión de Usuarios**: Listado, edición y gestión de roles
 - **Gestión de Mascotas**: Moderación de publicaciones
+- **Sistema de Configuraciones**: Gestión centralizada de configuraciones de la empresa
+  - Información de contacto (email, teléfono, dirección)
+  - Nombre y descripción de la plataforma
+  - Configuraciones públicas/privadas
+  - Actualización en tiempo real en toda la aplicación
 - **Estadísticas Implementadas**:
   - Total de mascotas registradas
   - Total de adopciones completadas (ACCEPTED)
   - Total de usuarios registrados
   - Total de chats activos
+
+### Sistema de Configuraciones Dinámicas
+- **Configuraciones Centralizadas**: Sistema robusto para gestionar configuraciones de la empresa
+- **Configuraciones Públicas**: API endpoint público para obtener configuraciones sin autenticación
+- **Actualizaciones en Tiempo Real**: Cambios automáticos en footer y páginas de contacto
+- **Categorías de Configuración**:
+  - **Empresa**: Nombre, email, teléfono, dirección, descripción
+  - **Email**: Configuraciones de notificaciones y remitente
+  - **Mascotas**: Límites y tipos permitidos
+  - **Seguridad**: Configuraciones de sesiones y contraseñas
+  - **Usuarios**: Roles y permisos por defecto
 
 ### Características Técnicas Avanzadas
 - **Servidor Personalizado**: Combinación de Next.js + Socket.IO en puerto 3000
@@ -201,6 +231,12 @@ npm run db:push
 
 # (Opcional) Resetear base de datos
 npm run db:reset
+
+# Poblar configuraciones iniciales del sistema
+node scripts/seed-settings.js
+
+# Marcar configuraciones como públicas (solo la primera vez)
+node scripts/update-public-settings.js
 ```
 
 ### 5. Ejecutar en Desarrollo
@@ -338,6 +374,32 @@ El proyecto utiliza un servidor personalizado (`server.ts`) que combina:
 - updatedAt: DateTime @updatedAt
 ```
 
+### Configuraciones del Sistema (settings)
+```sql
+- id: String (cuid, primary key)
+- key: String (unique)
+- value: String
+- type: SettingType (TEXT, NUMBER, BOOLEAN, EMAIL, URL, COLOR, JSON, FILE, TEXTAREA, SELECT)
+- category: String (company, email, pets, security, users)
+- label: String
+- description: String? (optional)
+- isPublic: Boolean @default(false)
+- order: Int @default(0)
+- createdAt: DateTime @default(now())
+- updatedAt: DateTime @updatedAt
+```
+
+### Actividades del Sistema (activities)
+```sql
+- id: String (cuid, primary key)
+- type: ActivityType (USER_REGISTRATION, PET_REGISTRATION, ADOPTION_REQUEST, etc.)
+- action: String
+- description: String
+- metadata: String? (JSON data)
+- userId: String? (foreign key, optional)
+- createdAt: DateTime @default(now())
+```
+
 ### Relaciones de Base de Datos
 - **Usuario → Mascotas**: Un usuario puede tener múltiples mascotas (1:N)
 - **Usuario → Mensajes**: Un usuario puede enviar/recibir múltiples mensajes (1:N)
@@ -417,6 +479,12 @@ NODE_ENV="production"
 - [x] UI completa con shadcn/ui components
 - [x] Páginas de landing responsive
 - [x] Sistema de usuarios de prueba
+- [x] **Sistema de configuraciones dinámicas**
+- [x] **Página de contacto dinámica (/contacto)**
+- [x] **Footer con información dinámica**
+- [x] **API endpoint público para configuraciones**
+- [x] **Scripts de configuración automatizados**
+- [x] **Páginas informativas (términos, FAQ, guía de adopción)**
 
 ### 🔄 Posibles Mejoras Futuras
 - [ ] Sistema de notificaciones push
@@ -474,12 +542,12 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ## 📞 Contacto
 
-Para preguntas o soporte, por favor contacta a:
+Para preguntas o soporte, por favor contacta a través de:
 
-- **Email**: contacto@petscartagena.com
-- **Sitio Web**: [https://petscartagena.com](https://petscartagena.com)
-- **GitHub**: [Issues del repositorio](https://github.com/tu-repo/petscartagena/issues)
+- **Página de Contacto**: Visita `/contacto` en la aplicación para información actualizada
+- **GitHub Issues**: [Issues del repositorio](https://github.com/davidcaroo/petscartagena/issues)
+- **Documentación**: Este README.md contiene toda la información técnica necesaria
 
 ---
 
-**PetsCartagena** - Donde cada mascota encuentra un hogar loving 🐕🐈🐾
+**PetsCartagena** - Donde cada mascota encuentra un hogar lleno de amor 🐕🐈🐾
