@@ -248,23 +248,6 @@ export default function TerminosYCondicionesPage() {
                                 </Card>
                             ))}
                         </div>
-
-                        {/* Footer Info */}
-                        <Card className="mt-8 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-                            <CardContent className="p-6">
-                                <div className="text-center">
-                                    <p className="text-lg mb-2">
-                                        © 2024 PetsCartagena. Todos los derechos reservados.
-                                    </p>
-                                    <p className="text-gray-300">
-                                        Hecho con <Heart className="w-4 h-4 inline text-red-400" /> para las mascotas.
-                                    </p>
-                                    <div className="mt-4 text-sm text-gray-400">
-                                        <p>Última actualización: Septiembre 2025</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
                 </div>
             </section>

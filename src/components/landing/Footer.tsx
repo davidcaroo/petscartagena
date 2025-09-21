@@ -46,7 +46,11 @@ export function Footer() {
                   Preguntas Frecuentes
                 </Link>
               </li>
-              <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Guía de Adopción</a></li>
+              <li>
+                <Link href="/guia-de-adopcion" className="hover:text-white transition-colors touch-target block py-1">
+                  Guía de Adopción
+                </Link>
+              </li>
               <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Contacto</a></li>
               <li>
                 <Link href="/terminos-y-condiciones" className="hover:text-white transition-colors touch-target block py-1">
