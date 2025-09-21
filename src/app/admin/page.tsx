@@ -116,25 +116,25 @@ export default function AdminDashboard() {
 
   if (isLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="animate-spin rounded-full h-16 w-16 sm:h-24 sm:w-24 lg:h-32 lg:w-32 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   if (!user || user.role !== "ADMIN") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <Card className="w-full max-w-md">
-          <CardContent className="text-center py-12">
-            <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <CardContent className="text-center py-8 sm:py-12">
+            <Shield className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
               Acceso Restringido
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 mb-6">
               Solo los administradores pueden acceder a este panel
             </p>
-            <Button onClick={() => router.push("/dashboard")}>
+            <Button onClick={() => router.push("/dashboard")} className="w-full sm:w-auto">
               Volver al Dashboard
             </Button>
           </CardContent>
@@ -147,33 +147,35 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Link href="/" className="flex items-center space-x-2">
                 <img
                   src="/petscartagena-logo.png"
                   alt="PetsCartagena"
-                  className="w-8 h-8"
+                  className="w-6 h-6 sm:w-8 sm:h-8"
                 />
-                <span className="text-xl font-bold text-gray-900">PetsCartagena</span>
+                <span className="text-lg sm:text-xl font-bold text-gray-900 hidden sm:block">PetsCartagena</span>
+                <span className="text-base font-bold text-gray-900 sm:hidden">Pets</span>
               </Link>
-              <div className="flex items-center space-x-2">
-                <Shield className="w-5 h-5 text-purple-500" />
-                <span className="text-sm font-medium text-purple-600">Panel de Administración</span>
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
+                <span className="text-xs sm:text-sm font-medium text-purple-600 hidden sm:block">Panel de Administración</span>
+                <span className="text-xs font-medium text-purple-600 sm:hidden">Admin</span>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <Avatar>
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
                   <AvatarImage src={user.avatar} />
-                  <AvatarFallback>
+                  <AvatarFallback className="text-xs sm:text-sm">
                     {user.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <p className="font-medium text-gray-900">{user.name}</p>
+                <div className="hidden sm:block">
+                  <p className="font-medium text-gray-900 text-sm">{user.name}</p>
                   <Badge variant="secondary" className="text-xs">
                     Administrador
                   </Badge>
@@ -184,9 +186,10 @@ export default function AdminDashboard() {
                 variant="ghost"
                 size="sm"
                 onClick={logout}
+                className="p-2 sm:px-3 sm:py-2"
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Cerrar Sesión
+                <LogOut className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Cerrar Sesión</span>
               </Button>
             </div>
           </div>
@@ -194,26 +197,26 @@ export default function AdminDashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-7xl px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             Panel de Administración
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Gestiona usuarios, mascotas y monitorea la actividad de la plataforma
           </p>
         </div>
 
         {/* Stats Grid */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Mascotas</CardTitle>
                 <Heart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalPets}</div>
+                <div className="text-xl sm:text-2xl font-bold">{stats.totalPets}</div>
                 <p className="text-xs text-muted-foreground">
                   Registradas en el sistema
                 </p>
@@ -226,7 +229,7 @@ export default function AdminDashboard() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalUsers}</div>
+                <div className="text-xl sm:text-2xl font-bold">{stats.totalUsers}</div>
                 <p className="text-xs text-muted-foreground">
                   Usuarios registrados
                 </p>
@@ -239,7 +242,7 @@ export default function AdminDashboard() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalAdoptions}</div>
+                <div className="text-xl sm:text-2xl font-bold">{stats.totalAdoptions}</div>
                 <p className="text-xs text-muted-foreground">
                   Procesos completados
                 </p>
@@ -252,7 +255,7 @@ export default function AdminDashboard() {
                 <MessageCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalChats}</div>
+                <div className="text-xl sm:text-2xl font-bold">{stats.totalChats}</div>
                 <p className="text-xs text-muted-foreground">
                   Conversaciones en curso
                 </p>
@@ -262,53 +265,53 @@ export default function AdminDashboard() {
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/users")}>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                 <Users className="w-5 h-5 text-blue-500" />
                 <span>Gestionar Usuarios</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Administra todos los usuarios de la plataforma
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-blue-500 hover:bg-blue-600">
+              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-sm sm:text-base py-2">
                 Ver Usuarios
               </Button>
             </CardContent>
           </Card>
 
           <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/pets")}>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                 <Heart className="w-5 h-5 text-red-500" />
                 <span>Gestionar Mascotas</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Administra todas las mascotas registradas
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-red-500 hover:bg-red-600">
+              <Button className="w-full bg-red-500 hover:bg-red-600 text-sm sm:text-base py-2">
                 Ver Mascotas
               </Button>
             </CardContent>
           </Card>
 
           <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push("/admin/adopciones")}>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                 <CheckCircle className="w-5 h-5 text-green-500" />
                 <span>Adopciones</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Revisa y gestiona las solicitudes de adopción
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-green-500 hover:bg-green-600">
+              <Button className="w-full bg-green-500 hover:bg-green-600 text-sm sm:text-base py-2 flex items-center justify-center">
                 Ver Solicitudes
                 {stats && stats.pendingAdoptions > 0 && (
                   <Badge variant="secondary" className="ml-2">
@@ -320,18 +323,18 @@ export default function AdminDashboard() {
           </Card>
 
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                 <Settings className="w-5 h-5 text-purple-500" />
                 <span>Configuración</span>
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Ajustes generales de la plataforma
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Link href="/admin/config">
-                <Button className="w-full bg-purple-500 hover:bg-purple-600">
+                <Button className="w-full bg-purple-500 hover:bg-purple-600 text-sm sm:text-base py-2">
                   Configurar
                 </Button>
               </Link>
@@ -340,46 +343,46 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
           <Card>
             <CardHeader>
-              <CardTitle>Actividad Reciente</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">Actividad Reciente</CardTitle>
               <CardDescription>
                 Últimas acciones en la plataforma
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {recentActivity.map((activity) => (
                   <div key={activity.id} className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      {activity.type === 'user' && <UserCheck className="w-5 h-5 text-blue-500" />}
-                      {activity.type === 'pet' && <PawPrint className="w-5 h-5 text-green-500" />}
-                      {activity.type === 'adoption' && <Heart className="w-5 h-5 text-red-500" />}
-                      {activity.type === 'chat' && <MessageCircle className="w-5 h-5 text-purple-500" />}
-                      {activity.type === 'system' && <Activity className="w-5 h-5 text-gray-500" />}
+                    <div className="flex-shrink-0 mt-0.5">
+                      {activity.type === 'user' && <UserCheck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />}
+                      {activity.type === 'pet' && <PawPrint className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />}
+                      {activity.type === 'adoption' && <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />}
+                      {activity.type === 'chat' && <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />}
+                      {activity.type === 'system' && <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <p className="text-sm font-medium text-gray-900 truncate">
                           {activity.action}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 mt-1 sm:mt-0 sm:ml-2 flex-shrink-0">
                           {activity.timestamp}
                         </p>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 mt-1">
                         {activity.description}
                       </p>
                       {activity.user && (
-                        <div className="flex items-center space-x-2 mt-1">
+                        <div className="flex items-center space-x-2 mt-2">
                           <Avatar className="w-4 h-4">
                             <AvatarImage src={activity.user.avatar} />
                             <AvatarFallback className="text-xs">
                               {activity.user.name.charAt(0).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 truncate">
                             {activity.user.name}
                           </span>
                         </div>
@@ -393,45 +396,45 @@ export default function AdminDashboard() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Acciones Rápidas</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">Acciones Rápidas</CardTitle>
               <CardDescription>
                 Tareas comunes de administración
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" className="justify-start">
-                  <UserCheck className="w-4 h-4 mr-2" />
-                  Verificar Usuarios
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <Button variant="outline" className="justify-start text-sm py-2 px-3">
+                  <UserCheck className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Verificar Usuarios</span>
                 </Button>
-                <Button variant="outline" className="justify-start">
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  Reportes
+                <Button variant="outline" className="justify-start text-sm py-2 px-3">
+                  <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Reportes</span>
                 </Button>
-                <Button variant="outline" className="justify-start">
-                  <Dog className="w-4 h-4 mr-2" />
-                  Mascotas Pendientes
+                <Button variant="outline" className="justify-start text-sm py-2 px-3">
+                  <Dog className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Mascotas Pendientes</span>
                 </Button>
-                <Button variant="outline" className="justify-start">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Revisar Chats
+                <Button variant="outline" className="justify-start text-sm py-2 px-3">
+                  <MessageCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Revisar Chats</span>
                 </Button>
               </div>
 
               <div className="pt-4 border-t">
-                <h4 className="font-medium text-gray-900 mb-3">Estadísticas Rápidas</h4>
+                <h4 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">Estadísticas Rápidas</h4>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Usuarios activos hoy:</span>
-                    <span className="font-medium">24</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 truncate pr-2">Usuarios activos hoy:</span>
+                    <span className="font-medium flex-shrink-0">24</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Nuevas mascotas:</span>
-                    <span className="font-medium">5</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 truncate pr-2">Nuevas mascotas:</span>
+                    <span className="font-medium flex-shrink-0">5</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Adopciones pendientes:</span>
-                    <span className="font-medium">12</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 truncate pr-2">Adopciones pendientes:</span>
+                    <span className="font-medium flex-shrink-0">12</span>
                   </div>
                 </div>
               </div>
