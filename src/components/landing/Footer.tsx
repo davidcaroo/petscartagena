@@ -2,8 +2,34 @@
 
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
+interface ContactSettings {
+  company_email?: { value: string };
+  company_phone?: { value: string };
+  company_address?: { value: string };
+  platform_name?: { value: string };
+}
 
 export function Footer() {
+  const [settings, setSettings] = useState<ContactSettings>({});
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch("/api/settings/public");
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data.settings);
+      }
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white padding-section">
       <div className="container-responsive">
@@ -15,7 +41,9 @@ export function Footer() {
                 alt="PetsCartagena"
                 className="w-8 h-8 sm:w-10 sm:h-10"
               />
-              <span className="text-lg sm:text-xl font-bold">PetsCartagena</span>
+              <span className="text-lg sm:text-xl font-bold">
+                {settings.platform_name?.value || "PetsCartagena"}
+              </span>
             </div>
             <p className="text-sm sm:text-base text-gray-300">
               Conectando corazones, creando familias.
@@ -51,7 +79,11 @@ export function Footer() {
                   Guía de Adopción
                 </Link>
               </li>
-              <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Contacto</a></li>
+              <li>
+                <Link href="/contacto" className="hover:text-white transition-colors touch-target block py-1">
+                  Contacto
+                </Link>
+              </li>
               <li>
                 <Link href="/terminos-y-condiciones" className="hover:text-white transition-colors touch-target block py-1">
                   Términos y Condiciones
@@ -65,15 +97,17 @@ export function Footer() {
             <div className="space-y-3 text-sm sm:text-base text-gray-300">
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 flex-shrink-0" />
-                <span className="break-words">info@petscartagena.com</span>
+                <span className="break-words">
+                  {settings.company_email?.value || "info@petscartagena.com"}
+                </span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                <span>+57 300 123 4567</span>
+                <span>{settings.company_phone?.value || "+57 300 123 4567"}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4 flex-shrink-0" />
-                <span>Cartagena, Colombia</span>
+                <span>{settings.company_address?.value || "Cartagena, Colombia"}</span>
               </div>
             </div>
           </div>

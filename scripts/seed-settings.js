@@ -11,6 +11,7 @@ const initialSettings = [
         category: "company",
         label: "Nombre de la Plataforma",
         description: "Nombre que aparece en el header y emails",
+        isPublic: true,
         order: 1
     },
     {
@@ -20,6 +21,7 @@ const initialSettings = [
         category: "company",
         label: "Email de Contacto",
         description: "Email principal de contacto",
+        isPublic: true,
         order: 2
     },
     {
@@ -29,6 +31,7 @@ const initialSettings = [
         category: "company",
         label: "Teléfono de Contacto",
         description: "Número de teléfono principal",
+        isPublic: true,
         order: 3
     },
     {
@@ -38,6 +41,7 @@ const initialSettings = [
         category: "company",
         label: "Dirección",
         description: "Dirección física de la empresa",
+        isPublic: true,
         order: 4
     },
     {
@@ -47,6 +51,7 @@ const initialSettings = [
         category: "company",
         label: "Descripción de la Empresa",
         description: "Descripción que aparece en la página principal",
+        isPublic: true,
         order: 5
     },
 
