@@ -35,7 +35,7 @@ export function ResponsibleAdoption() {
             Adopción Responsable
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Adoptar es un acto de amor que requiere compromiso y responsabilidad. 
+            Adoptar es un acto de amor que requiere compromiso y responsabilidad.
             En PetsCartagena, te guiamos en cada paso del proceso.
           </p>
         </div>
@@ -63,7 +63,7 @@ export function ResponsibleAdoption() {
             ¿Listo para cambiar una vida?
           </h3>
           <p className="text-lg text-gray-600 mb-6">
-            Cada adopción salva dos vidas: la de la mascota que encuentra un hogar 
+            Cada adopción salva dos vidas: la de la mascota que encuentra un hogar
             y la de la que puede rescatarse en su lugar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

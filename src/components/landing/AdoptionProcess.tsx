@@ -35,7 +35,7 @@ export function AdoptionProcess() {
             Proceso de Adopción Sencillo
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Hemos diseñado un proceso transparente y seguro para que tu experiencia 
+            Hemos diseñado un proceso transparente y seguro para que tu experiencia
             de adopción sea positiva y memorable.
           </p>
         </div>
@@ -56,7 +56,7 @@ export function AdoptionProcess() {
                   </p>
                 </CardContent>
               </Card>
-              
+
               {index < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
                   <div className="w-8 h-0.5 bg-orange-300"></div>

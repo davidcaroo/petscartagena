@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +45,6 @@ import {
     ChevronLeft,
     ChevronRight
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
 
 interface AdoptionUser {
     id: string;
@@ -100,6 +100,7 @@ interface AdoptionsResponse {
 }
 
 export default function AdoptionsPage() {
+    const router = useRouter();
     const [adoptions, setAdoptions] = useState<AdoptionRequest[]>([]);
     const [stats, setStats] = useState<AdoptionStats>({
         total: 0,
@@ -430,235 +431,256 @@ export default function AdoptionsPage() {
     }
 
     return (
-        <AdminLayout
-            title="Gestión de Adopciones"
-            description="Administra las solicitudes de adopción de mascotas"
-        >
-            {/* Estadísticas */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-                <StatsCard
-                    title="Total"
-                    value={stats.total}
-                    icon={Heart}
-                />
-                <StatsCard
-                    title="Pendientes"
-                    value={stats.pending}
-                    icon={Clock}
-                    className="border-orange-200"
-                />
-                <StatsCard
-                    title="Aprobadas"
-                    value={stats.accepted}
-                    icon={CheckCircle}
-                    className="border-green-200"
-                />
-                <StatsCard
-                    title="Rechazadas"
-                    value={stats.rejected}
-                    icon={XCircle}
-                    className="border-red-200"
-                />
-                <StatsCard
-                    title="Canceladas"
-                    value={stats.cancelled}
-                    icon={Ban}
-                    className="border-gray-200"
-                />
-            </div>            {/* Filtros y búsqueda */}
-            <Card className="mb-6">
-                <CardContent className="p-4">
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <div className="flex-1">
-                            <Label htmlFor="search">Buscar</Label>
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                                <Input
-                                    id="search"
-                                    placeholder="Buscar por mascota, adoptante, email..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-10"
-                                />
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <header className="bg-white shadow-sm border-b">
+                <div className="container mx-auto max-w-7xl px-4">
+                    <div className="flex items-center justify-between h-16">
+                        <div className="flex items-center space-x-4">
+                            <button
+                                onClick={() => router.back()}
+                                className="p-2 hover:bg-gray-100 rounded-lg"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <div>
+                                <h1 className="text-2xl font-bold text-gray-900">Gestión de Adopciones</h1>
+                                <p className="text-sm text-gray-600">Administra las solicitudes de adopción de mascotas</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </header>
 
-                        {selectedTab === "resumen" && (
-                            <div className="w-full md:w-48">
-                                <Label htmlFor="status-filter">Estado</Label>
-                                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Filtrar por estado" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">Todos</SelectItem>
-                                        <SelectItem value="PENDING">Pendientes</SelectItem>
-                                        <SelectItem value="ACCEPTED">Aprobadas</SelectItem>
-                                        <SelectItem value="REJECTED">Rechazadas</SelectItem>
-                                        <SelectItem value="CANCELLED">Canceladas</SelectItem>
-                                    </SelectContent>
-                                </Select>
+            <div className="container mx-auto max-w-7xl px-4 py-8">
+                {/* Estadísticas */}
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                    <StatsCard
+                        title="Total"
+                        value={stats.total}
+                        icon={Heart}
+                    />
+                    <StatsCard
+                        title="Pendientes"
+                        value={stats.pending}
+                        icon={Clock}
+                        className="border-orange-200"
+                    />
+                    <StatsCard
+                        title="Aprobadas"
+                        value={stats.accepted}
+                        icon={CheckCircle}
+                        className="border-green-200"
+                    />
+                    <StatsCard
+                        title="Rechazadas"
+                        value={stats.rejected}
+                        icon={XCircle}
+                        className="border-red-200"
+                    />
+                    <StatsCard
+                        title="Canceladas"
+                        value={stats.cancelled}
+                        icon={Ban}
+                        className="border-gray-200"
+                    />
+                </div>            {/* Filtros y búsqueda */}
+                <Card className="mb-6">
+                    <CardContent className="p-4">
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <div className="flex-1">
+                                <Label htmlFor="search">Buscar</Label>
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                                    <Input
+                                        id="search"
+                                        placeholder="Buscar por mascota, adoptante, email..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="pl-10"
+                                    />
+                                </div>
                             </div>
-                        )}
-                    </div>
-                </CardContent>
-            </Card>
 
-            {/* Tabs de navegación */}
-            <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-                <TabsList className="grid w-full grid-cols-5">
-                    <TabsTrigger value="resumen">Resumen</TabsTrigger>
-                    <TabsTrigger value="pendientes">
-                        Pendientes {stats.pending > 0 && `(${stats.pending})`}
-                    </TabsTrigger>
-                    <TabsTrigger value="aprobadas">Aprobadas</TabsTrigger>
-                    <TabsTrigger value="rechazadas">Rechazadas</TabsTrigger>
-                    <TabsTrigger value="canceladas">Canceladas</TabsTrigger>
-                </TabsList>
+                            {selectedTab === "resumen" && (
+                                <div className="w-full md:w-48">
+                                    <Label htmlFor="status-filter">Estado</Label>
+                                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Filtrar por estado" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">Todos</SelectItem>
+                                            <SelectItem value="PENDING">Pendientes</SelectItem>
+                                            <SelectItem value="ACCEPTED">Aprobadas</SelectItem>
+                                            <SelectItem value="REJECTED">Rechazadas</SelectItem>
+                                            <SelectItem value="CANCELLED">Canceladas</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
 
-                <TabsContent value="resumen" className="mt-6">
-                    <div className="space-y-4">
-                        {filteredAdoptions.map((adoption) => (
-                            <AdoptionCard key={adoption.id} adoption={adoption} />
-                        ))}
-                        {filteredAdoptions.length === 0 && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                                    <h3 className="text-lg font-semibold mb-2">No hay adopciones</h3>
-                                    <p className="text-muted-foreground">
-                                        {searchTerm
-                                            ? "No se encontraron adopciones que coincidan con tu búsqueda"
-                                            : "No hay solicitudes de adopción registradas"}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )}
-                        <Pagination />
-                    </div>
-                </TabsContent>
+                {/* Tabs de navegación */}
+                <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+                    <TabsList className="grid w-full grid-cols-5">
+                        <TabsTrigger value="resumen">Resumen</TabsTrigger>
+                        <TabsTrigger value="pendientes">
+                            Pendientes {stats.pending > 0 && `(${stats.pending})`}
+                        </TabsTrigger>
+                        <TabsTrigger value="aprobadas">Aprobadas</TabsTrigger>
+                        <TabsTrigger value="rechazadas">Rechazadas</TabsTrigger>
+                        <TabsTrigger value="canceladas">Canceladas</TabsTrigger>
+                    </TabsList>
 
-                <TabsContent value="pendientes" className="mt-6">
-                    <div className="space-y-4">
-                        {filteredAdoptions.map((adoption) => (
-                            <AdoptionCard key={adoption.id} adoption={adoption} />
-                        ))}
-                        {filteredAdoptions.length === 0 && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <Clock className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                                    <h3 className="text-lg font-semibold mb-2">No hay adopciones pendientes</h3>
-                                    <p className="text-muted-foreground">
-                                        Todas las solicitudes han sido procesadas
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )}
-                        <Pagination />
-                    </div>
-                </TabsContent>
+                    <TabsContent value="resumen" className="mt-6">
+                        <div className="space-y-4">
+                            {filteredAdoptions.map((adoption) => (
+                                <AdoptionCard key={adoption.id} adoption={adoption} />
+                            ))}
+                            {filteredAdoptions.length === 0 && (
+                                <Card>
+                                    <CardContent className="p-8 text-center">
+                                        <Heart className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                                        <h3 className="text-lg font-semibold mb-2">No hay adopciones</h3>
+                                        <p className="text-muted-foreground">
+                                            {searchTerm
+                                                ? "No se encontraron adopciones que coincidan con tu búsqueda"
+                                                : "No hay solicitudes de adopción registradas"}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            <Pagination />
+                        </div>
+                    </TabsContent>
 
-                <TabsContent value="aprobadas" className="mt-6">
-                    <div className="space-y-4">
-                        {filteredAdoptions.map((adoption) => (
-                            <AdoptionCard key={adoption.id} adoption={adoption} />
-                        ))}
-                        {filteredAdoptions.length === 0 && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
-                                    <h3 className="text-lg font-semibold mb-2">No hay adopciones aprobadas</h3>
-                                    <p className="text-muted-foreground">
-                                        Las adopciones aprobadas aparecerán aquí
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )}
-                        <Pagination />
-                    </div>
-                </TabsContent>
+                    <TabsContent value="pendientes" className="mt-6">
+                        <div className="space-y-4">
+                            {filteredAdoptions.map((adoption) => (
+                                <AdoptionCard key={adoption.id} adoption={adoption} />
+                            ))}
+                            {filteredAdoptions.length === 0 && (
+                                <Card>
+                                    <CardContent className="p-8 text-center">
+                                        <Clock className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                                        <h3 className="text-lg font-semibold mb-2">No hay adopciones pendientes</h3>
+                                        <p className="text-muted-foreground">
+                                            Todas las solicitudes han sido procesadas
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            <Pagination />
+                        </div>
+                    </TabsContent>
 
-                <TabsContent value="rechazadas" className="mt-6">
-                    <div className="space-y-4">
-                        {filteredAdoptions.map((adoption) => (
-                            <AdoptionCard key={adoption.id} adoption={adoption} />
-                        ))}
-                        {filteredAdoptions.length === 0 && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <XCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
-                                    <h3 className="text-lg font-semibold mb-2">No hay adopciones rechazadas</h3>
-                                    <p className="text-muted-foreground">
-                                        Las adopciones rechazadas aparecerán aquí
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )}
-                        <Pagination />
-                    </div>
-                </TabsContent>
+                    <TabsContent value="aprobadas" className="mt-6">
+                        <div className="space-y-4">
+                            {filteredAdoptions.map((adoption) => (
+                                <AdoptionCard key={adoption.id} adoption={adoption} />
+                            ))}
+                            {filteredAdoptions.length === 0 && (
+                                <Card>
+                                    <CardContent className="p-8 text-center">
+                                        <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
+                                        <h3 className="text-lg font-semibold mb-2">No hay adopciones aprobadas</h3>
+                                        <p className="text-muted-foreground">
+                                            Las adopciones aprobadas aparecerán aquí
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            <Pagination />
+                        </div>
+                    </TabsContent>
 
-                <TabsContent value="canceladas" className="mt-6">
-                    <div className="space-y-4">
-                        {filteredAdoptions.map((adoption) => (
-                            <AdoptionCard key={adoption.id} adoption={adoption} />
-                        ))}
-                        {filteredAdoptions.length === 0 && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <Ban className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                                    <h3 className="text-lg font-semibold mb-2">No hay adopciones canceladas</h3>
-                                    <p className="text-muted-foreground">
-                                        Las adopciones canceladas aparecerán aquí
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )}
-                        <Pagination />
-                    </div>
-                </TabsContent>
-            </Tabs>
+                    <TabsContent value="rechazadas" className="mt-6">
+                        <div className="space-y-4">
+                            {filteredAdoptions.map((adoption) => (
+                                <AdoptionCard key={adoption.id} adoption={adoption} />
+                            ))}
+                            {filteredAdoptions.length === 0 && (
+                                <Card>
+                                    <CardContent className="p-8 text-center">
+                                        <XCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
+                                        <h3 className="text-lg font-semibold mb-2">No hay adopciones rechazadas</h3>
+                                        <p className="text-muted-foreground">
+                                            Las adopciones rechazadas aparecerán aquí
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            <Pagination />
+                        </div>
+                    </TabsContent>
 
-            {/* Dialog de confirmación de acción */}
-            <AlertDialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            {actionType === 'accept' ? '✅ Aprobar Adopción' : '❌ Rechazar Adopción'}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {actionType === 'accept'
-                                ? `¿Estás seguro de que deseas aprobar la adopción de ${selectedAdoption?.pet.name} para ${selectedAdoption?.user.name}? Esta acción marcará la mascota como no disponible.`
-                                : `¿Estás seguro de que deseas rechazar la adopción de ${selectedAdoption?.pet.name} para ${selectedAdoption?.user.name}?`
-                            }
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
+                    <TabsContent value="canceladas" className="mt-6">
+                        <div className="space-y-4">
+                            {filteredAdoptions.map((adoption) => (
+                                <AdoptionCard key={adoption.id} adoption={adoption} />
+                            ))}
+                            {filteredAdoptions.length === 0 && (
+                                <Card>
+                                    <CardContent className="p-8 text-center">
+                                        <Ban className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                                        <h3 className="text-lg font-semibold mb-2">No hay adopciones canceladas</h3>
+                                        <p className="text-muted-foreground">
+                                            Las adopciones canceladas aparecerán aquí
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
+                            <Pagination />
+                        </div>
+                    </TabsContent>
+                </Tabs>
 
-                    <div className="my-4">
-                        <Label htmlFor="admin-comment">
-                            Comentario adicional {actionType === 'reject' ? '(requerido)' : '(opcional)'}
-                        </Label>
-                        <Textarea
-                            id="admin-comment"
-                            placeholder={`${actionType === 'accept' ? 'Felicitaciones por la adopción...' : 'Razón del rechazo...'}`}
-                            value={adminComment}
-                            onChange={(e) => setAdminComment(e.target.value)}
-                            rows={3}
-                        />
-                    </div>
+                {/* Dialog de confirmación de acción */}
+                <AlertDialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                {actionType === 'accept' ? '✅ Aprobar Adopción' : '❌ Rechazar Adopción'}
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                {actionType === 'accept'
+                                    ? `¿Estás seguro de que deseas aprobar la adopción de ${selectedAdoption?.pet.name} para ${selectedAdoption?.user.name}? Esta acción marcará la mascota como no disponible.`
+                                    : `¿Estás seguro de que deseas rechazar la adopción de ${selectedAdoption?.pet.name} para ${selectedAdoption?.user.name}?`
+                                }
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
 
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleStatusChange}
-                            disabled={actionType === 'reject' && !adminComment.trim()}
-                            className={actionType === 'accept' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
-                        >
-                            {actionType === 'accept' ? 'Aprobar' : 'Rechazar'}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        </AdminLayout>
+                        <div className="my-4">
+                            <Label htmlFor="admin-comment">
+                                Comentario adicional {actionType === 'reject' ? '(requerido)' : '(opcional)'}
+                            </Label>
+                            <Textarea
+                                id="admin-comment"
+                                placeholder={`${actionType === 'accept' ? 'Felicitaciones por la adopción...' : 'Razón del rechazo...'}`}
+                                value={adminComment}
+                                onChange={(e) => setAdminComment(e.target.value)}
+                                rows={3}
+                            />
+                        </div>
+
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={handleStatusChange}
+                                disabled={actionType === 'reject' && !adminComment.trim()}
+                                className={actionType === 'accept' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
+                            >
+                                {actionType === 'accept' ? 'Aprobar' : 'Rechazar'}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+        </div>
     );
 }
