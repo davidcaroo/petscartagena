@@ -122,6 +122,11 @@
     @apply gap-6 sm:gap-8;
   }
 
+  /* Container responsive utility */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
   /* Touch-friendly utilities */
   .touch-target {
     @apply min-h-[44px] min-w-[44px] touch-manipulation;

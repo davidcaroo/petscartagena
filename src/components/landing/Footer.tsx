@@ -1,6 +1,7 @@
 "use client";
 
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -40,10 +41,18 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="text-base sm:text-lg font-semibold">Soporte</h3>
             <ul className="space-y-2 text-sm sm:text-base text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Preguntas Frecuentes</a></li>
+              <li>
+                <Link href="/preguntas-frecuentes" className="hover:text-white transition-colors touch-target block py-1">
+                  Preguntas Frecuentes
+                </Link>
+              </li>
               <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Guía de Adopción</a></li>
               <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Contacto</a></li>
-              <li><a href="#" className="hover:text-white transition-colors touch-target block py-1">Términos y Condiciones</a></li>
+              <li>
+                <Link href="/terminos-y-condiciones" className="hover:text-white transition-colors touch-target block py-1">
+                  Términos y Condiciones
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -73,3 +82,5 @@ export function Footer() {
     </footer>
   );
 }
+
+export default Footer;

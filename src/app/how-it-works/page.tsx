@@ -3,14 +3,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Search, 
-  MessageCircle, 
-  Heart, 
-  Home, 
-  Shield, 
-  CheckCircle, 
-  Users, 
+import { Header } from "@/components/landing/Header";
+import {
+  Search,
+  MessageCircle,
+  Heart,
+  Home,
+  Shield,
+  CheckCircle,
+  Users,
   Clock,
   FileText,
   Star,
@@ -131,7 +132,9 @@ export default function HowItWorksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      <Header />
+
+      {/* Page Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto max-w-6xl px-4 py-16">
           <div className="text-center">
@@ -139,7 +142,7 @@ export default function HowItWorksPage() {
               Cómo Funciona la Adopción en PetsCartagena
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Hemos diseñado un proceso simple, seguro y transparente para que 
+              Hemos diseñado un proceso simple, seguro y transparente para que
               tu experiencia de adopción sea positiva y memorable.
             </p>
           </div>
@@ -191,7 +194,7 @@ export default function HowItWorksPage() {
                       </ul>
                     </div>
                   </div>
-                  
+
                   <div className="lg:col-span-7">
                     <div className="bg-white rounded-xl shadow-lg p-8 h-full">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -207,19 +210,19 @@ export default function HowItWorksPage() {
                           <div className="flex items-center space-x-2">
                             <Clock className="w-4 h-4 text-gray-400" />
                             <span className="text-sm text-gray-600">
-                              {index === 0 ? "Tiempo: Variable" : 
-                               index === 1 ? "Tiempo: 1-3 días" :
-                               index === 2 ? "Tiempo: 3-7 días" :
-                               index === 3 ? "Tiempo: 1-2 días" : "¡Para siempre!"}
+                              {index === 0 ? "Tiempo: Variable" :
+                                index === 1 ? "Tiempo: 1-3 días" :
+                                  index === 2 ? "Tiempo: 3-7 días" :
+                                    index === 3 ? "Tiempo: 1-2 días" : "¡Para siempre!"}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <Users className="w-4 h-4 text-gray-400" />
                             <span className="text-sm text-gray-600">
                               {index === 0 ? "Participantes: Tú" :
-                               index === 1 ? "Participantes: Tú y el dueño" :
-                               index === 2 ? "Participantes: Tú, dueño y mascota" :
-                               index === 3 ? "Participantes: Tú y el dueño" : "Participantes: Tú y tu mascota"}
+                                index === 1 ? "Participantes: Tú y el dueño" :
+                                  index === 2 ? "Participantes: Tú, dueño y mascota" :
+                                    index === 3 ? "Participantes: Tú y el dueño" : "Participantes: Tú y tu mascota"}
                             </span>
                           </div>
                           <Badge variant={index < 4 ? "secondary" : "default"} className="w-fit">
@@ -230,7 +233,7 @@ export default function HowItWorksPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {index < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
                     <div className="w-8 h-0.5 bg-orange-300"></div>
@@ -313,7 +316,7 @@ export default function HowItWorksPage() {
             ¿Listo para cambiar una vida?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Miles de mascotas esperan por un hogar amoroso. 
+            Miles de mascotas esperan por un hogar amoroso.
             Tu próximo mejor amigo está a solo unos clics de distancia.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

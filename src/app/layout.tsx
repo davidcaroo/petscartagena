@@ -8,17 +8,26 @@ export const metadata: Metadata = {
   description: "Encuentra una familia ideal para tu mejor amigo. Plataforma de adopción responsable de mascotas en Cartagena.",
   keywords: ["adopción", "mascotas", "Cartagena", "perros", "gatos", "adopción responsable"],
   authors: [{ name: "PetsCartagena Team" }],
+  icons: {
+    icon: [
+      { url: "/petscartagena-logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/petscartagena-logo.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/petscartagena-logo.png",
+  },
   openGraph: {
     title: "PetsCartagena - Adopción Responsable de Mascotas",
     description: "Encuentra una familia ideal para tu mejor amigo. Plataforma de adopción responsable de mascotas en Cartagena.",
     url: "https://petscartagena.com",
     siteName: "PetsCartagena",
     type: "website",
+    images: ["/petscartagena-logo.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "PetsCartagena - Adopción Responsable de Mascotas",
     description: "Encuentra una familia ideal para tu mejor amigo. Plataforma de adopción responsable de mascotas en Cartagena.",
+    images: ["/petscartagena-logo.png"],
   },
 };
 
