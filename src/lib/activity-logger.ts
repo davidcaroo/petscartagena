@@ -121,5 +121,14 @@ export const ActivityLogger = {
       action,
       description,
       metadata
+    }),
+
+  userAction: (userId: string, action: string, description: string, metadata?: Record<string, any>) =>
+    logActivity({
+      type: 'SYSTEM_EVENT',
+      action,
+      description,
+      userId,
+      metadata
     })
 };

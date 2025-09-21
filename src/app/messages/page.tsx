@@ -251,11 +251,34 @@ export default function MessagesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex">
+        <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+            {/* Mobile Header - Solo visible en móviles */}
+            <div className="lg:hidden bg-white border-b border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => router.push("/dashboard")}
+                        className="p-2"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                    </Button>
+                    <h1 className="text-lg font-semibold">
+                        {selectedChat ? getOtherUser(selectedChat).name : "Mensajes"}
+                    </h1>
+                    <Button variant="ghost" size="sm" className="p-2">
+                        <MoreVertical className="w-4 h-4" />
+                    </Button>
+                </div>
+            </div>
+
             {/* Left Sidebar - Chat List */}
-            <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-                {/* Header */}
-                <div className="p-4 border-b border-gray-200">
+            <div className={`bg-white border-r border-gray-200 flex flex-col ${selectedChat
+                    ? "hidden lg:flex lg:w-80"
+                    : "w-full lg:w-80"
+                }`}>
+                {/* Desktop Header */}
+                <div className="hidden lg:block p-4 border-b border-gray-200">
                     <div className="flex items-center justify-between mb-4">
                         <Button
                             variant="ghost"
@@ -283,15 +306,29 @@ export default function MessagesPage() {
                     </div>
                 </div>
 
+                {/* Mobile Search */}
+                <div className="lg:hidden p-4 border-b border-gray-200">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <Input
+                            placeholder="Buscar conversaciones..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10"
+                        />
+                    </div>
+                </div>
+
                 {/* Chat List */}
                 <div className="flex-1 overflow-y-auto">
                     {filteredChats.length === 0 ? (
                         <div className="p-4 text-center text-gray-500">
-                            <p>No tienes conversaciones aún</p>
+                            <p className="text-sm md:text-base">No tienes conversaciones aún</p>
                             <Button
                                 variant="outline"
                                 onClick={() => router.push("/adopt")}
-                                className="mt-2"
+                                className="mt-2 touch-target"
+                                size="sm"
                             >
                                 Explorar mascotas
                             </Button>
@@ -305,11 +342,11 @@ export default function MessagesPage() {
                                 <div
                                     key={chat.id}
                                     onClick={() => selectChat(chat)}
-                                    className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${isSelected ? "bg-purple-50 border-l-4 border-l-purple-500" : ""
+                                    className={`p-3 md:p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors touch-target ${isSelected ? "bg-purple-50 border-l-4 border-l-purple-500" : ""
                                         }`}
                                 >
                                     <div className="flex items-start space-x-3">
-                                        <Avatar className="w-12 h-12">
+                                        <Avatar className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0">
                                             <AvatarImage src={otherUser.avatar} />
                                             <AvatarFallback className="bg-purple-100 text-purple-600">
                                                 {otherUser.name.charAt(0).toUpperCase()}
@@ -317,29 +354,29 @@ export default function MessagesPage() {
                                         </Avatar>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between">
-                                                <div className="flex items-center space-x-2">
-                                                    <h3 className="font-medium text-gray-900 truncate">
+                                                <div className="flex items-center space-x-2 min-w-0 flex-1">
+                                                    <h3 className="font-medium text-gray-900 truncate text-sm md:text-base">
                                                         {otherUser.name}
                                                     </h3>
                                                     {/* Punto azul para mensajes no leídos */}
                                                     {chat.lastMessage &&
                                                         chat.lastMessage.senderId !== user?.id &&
                                                         hasUnreadMessages(chat) && (
-                                                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                                            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
                                                         )}
                                                 </div>
-                                                <span className="text-xs text-gray-500">
+                                                <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
                                                     {chat.lastMessage ? formatTime(chat.lastMessage.createdAt) : formatTime(chat.createdAt)}
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between mt-1">
-                                                <p className="text-sm text-gray-600 truncate flex-1">
+                                                <p className="text-xs md:text-sm text-gray-600 truncate flex-1">
                                                     {chat.lastMessage?.content || "Conversación iniciada"}
                                                 </p>
                                                 {/* Check marks para el último mensaje si lo envié yo */}
                                                 {chat.lastMessage &&
                                                     chat.lastMessage.senderId === user?.id && (
-                                                        <div className="ml-2">
+                                                        <div className="ml-2 flex-shrink-0">
                                                             {getMessageReadStatus(chat.lastMessage)}
                                                         </div>
                                                     )}
@@ -357,36 +394,47 @@ export default function MessagesPage() {
             </div>
 
             {/* Center - Chat Interface */}
-            <div className="flex-1 flex flex-col">
+            <div className={`flex-1 flex flex-col ${selectedChat
+                    ? "w-full lg:flex"
+                    : "hidden lg:flex"
+                }`}>
                 {selectedChat ? (
                     <>
                         {/* Chat Header */}
-                        <div className="bg-white border-b border-gray-200 p-4">
+                        <div className="bg-white border-b border-gray-200 p-3 md:p-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-3">
-                                    <Avatar className="w-10 h-10">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setSelectedChat(null)}
+                                        className="lg:hidden p-2"
+                                    >
+                                        <ArrowLeft className="w-4 h-4" />
+                                    </Button>
+                                    <Avatar className="w-8 h-8 md:w-10 md:h-10">
                                         <AvatarImage src={getOtherUser(selectedChat).avatar} />
                                         <AvatarFallback className="bg-purple-100 text-purple-600">
                                             {getOtherUser(selectedChat).name.charAt(0).toUpperCase()}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div>
-                                        <h2 className="font-semibold text-gray-900">
+                                    <div className="min-w-0 flex-1">
+                                        <h2 className="font-semibold text-gray-900 text-sm md:text-base truncate">
                                             {getOtherUser(selectedChat).name}
                                         </h2>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-xs md:text-sm text-gray-500 truncate">
                                             {getOtherUser(selectedChat).role === "USER" ? "Adoptante" : "Dueño de mascota"}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                    <Button variant="ghost" size="sm">
+                                <div className="flex items-center space-x-1 md:space-x-2">
+                                    <Button variant="ghost" size="sm" className="touch-target p-2">
                                         <Phone className="w-4 h-4" />
                                     </Button>
-                                    <Button variant="ghost" size="sm">
+                                    <Button variant="ghost" size="sm" className="touch-target p-2">
                                         <Video className="w-4 h-4" />
                                     </Button>
-                                    <Button variant="ghost" size="sm">
+                                    <Button variant="ghost" size="sm" className="touch-target p-2">
                                         <Info className="w-4 h-4" />
                                     </Button>
                                 </div>
@@ -394,10 +442,10 @@ export default function MessagesPage() {
                         </div>
 
                         {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                        <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50">
                             {messages.length === 0 ? (
                                 <div className="text-center py-8">
-                                    <p className="text-gray-500">No hay mensajes aún. ¡Comienza la conversación!</p>
+                                    <p className="text-gray-500 text-sm md:text-base">No hay mensajes aún. ¡Comienza la conversación!</p>
                                 </div>
                             ) : (
                                 messages.map((message) => (
@@ -407,12 +455,12 @@ export default function MessagesPage() {
                                             }`}
                                     >
                                         <div
-                                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${message.senderId === user?.id
+                                            className={`max-w-[280px] sm:max-w-xs lg:max-w-md px-3 md:px-4 py-2 rounded-lg ${message.senderId === user?.id
                                                 ? "bg-purple-500 text-white"
                                                 : "bg-white text-gray-900 shadow-sm border"
                                                 }`}
                                         >
-                                            <p className="text-sm">{message.content}</p>
+                                            <p className="text-sm break-words">{message.content}</p>
                                             <div className="flex items-center justify-between mt-1">
                                                 <p
                                                     className={`text-xs ${message.senderId === user?.id
@@ -436,14 +484,14 @@ export default function MessagesPage() {
                         </div>
 
                         {/* Message Input */}
-                        <div className="bg-white border-t border-gray-200 p-4">
-                            <form onSubmit={sendMessage} className="flex space-x-4">
+                        <div className="bg-white border-t border-gray-200 p-3 md:p-4">
+                            <form onSubmit={sendMessage} className="flex space-x-2 md:space-x-4">
                                 <Input
                                     type="text"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     placeholder="Escribe un mensaje..."
-                                    className="flex-1"
+                                    className="flex-1 min-h-[44px]"
                                     onKeyPress={(e) => {
                                         if (e.key === "Enter" && !e.shiftKey) {
                                             e.preventDefault();
@@ -453,7 +501,7 @@ export default function MessagesPage() {
                                 />
                                 <Button
                                     type="submit"
-                                    className="bg-purple-500 hover:bg-purple-600"
+                                    className="bg-purple-500 hover:bg-purple-600 touch-target px-3 md:px-4"
                                     disabled={!newMessage.trim()}
                                 >
                                     <Send className="w-4 h-4" />
@@ -463,15 +511,15 @@ export default function MessagesPage() {
                     </>
                 ) : (
                     /* No Chat Selected */
-                    <div className="flex-1 flex items-center justify-center bg-gray-50">
+                    <div className="flex-1 flex items-center justify-center bg-gray-50 p-4">
                         <div className="text-center">
-                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Send className="w-8 h-8 text-purple-500" />
+                            <div className="w-12 h-12 md:w-16 md:h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Send className="w-6 h-6 md:w-8 md:h-8 text-purple-500" />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">
+                            <h3 className="text-base md:text-lg font-medium text-gray-900 mb-2">
                                 Selecciona una conversación
                             </h3>
-                            <p className="text-gray-500">
+                            <p className="text-sm md:text-base text-gray-500 max-w-sm mx-auto">
                                 Elige una conversación de la lista para comenzar a chatear
                             </p>
                         </div>
@@ -479,23 +527,23 @@ export default function MessagesPage() {
                 )}
             </div>
 
-            {/* Right Sidebar - User Info */}
+            {/* Right Sidebar - User Info - Solo visible en desktop */}
             {selectedChat && (
-                <div className="w-80 bg-white border-l border-gray-200 p-4">
+                <div className="hidden xl:block w-80 bg-white border-l border-gray-200 p-4">
                     <div className="text-center">
-                        <Avatar className="w-20 h-20 mx-auto mb-4">
+                        <Avatar className="w-16 h-16 lg:w-20 lg:h-20 mx-auto mb-4">
                             <AvatarImage src={getOtherUser(selectedChat).avatar} />
-                            <AvatarFallback className="bg-purple-100 text-purple-600 text-xl">
+                            <AvatarFallback className="bg-purple-100 text-purple-600 text-lg lg:text-xl">
                                 {getOtherUser(selectedChat).name.charAt(0).toUpperCase()}
                             </AvatarFallback>
                         </Avatar>
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-base lg:text-lg font-semibold text-gray-900">
                             {getOtherUser(selectedChat).name}
                         </h3>
-                        <p className="text-sm text-gray-500 mb-4">
+                        <p className="text-sm text-gray-500 mb-4 break-words">
                             {getOtherUser(selectedChat).email}
                         </p>
-                        <Badge className="mb-6">
+                        <Badge className="mb-6 text-xs">
                             {getOtherUser(selectedChat).role === "USER" ? "Adoptante" : "Dueño de mascota"}
                         </Badge>
                     </div>
@@ -510,7 +558,7 @@ export default function MessagesPage() {
                             <CardContent className="space-y-2">
                                 <div>
                                     <p className="text-xs text-gray-500">Email</p>
-                                    <p className="text-sm font-medium">{getOtherUser(selectedChat).email}</p>
+                                    <p className="text-sm font-medium break-words">{getOtherUser(selectedChat).email}</p>
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500">Tipo de usuario</p>
@@ -541,11 +589,11 @@ export default function MessagesPage() {
                     <Separator className="my-6" />
 
                     <div className="space-y-2">
-                        <Button variant="outline" className="w-full" size="sm">
+                        <Button variant="outline" className="w-full touch-target" size="sm">
                             <Phone className="w-4 h-4 mr-2" />
                             Llamar
                         </Button>
-                        <Button variant="outline" className="w-full" size="sm">
+                        <Button variant="outline" className="w-full touch-target" size="sm">
                             <Video className="w-4 h-4 mr-2" />
                             Videollamada
                         </Button>

@@ -82,16 +82,16 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center">Crear Cuenta</CardTitle>
-          <CardDescription className="text-center">
+        <CardHeader className="space-y-1 px-6 pt-6">
+          <CardTitle className="text-xl sm:text-2xl text-center">Crear Cuenta</CardTitle>
+          <CardDescription className="text-center text-sm">
             Únete a PetsCartagena para encontrar tu compañero perfecto
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-6">
             {error && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
                 {error}
@@ -103,7 +103,7 @@ export default function SignUpPage() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="name">Nombre Completo</Label>
+              <Label htmlFor="name" className="text-sm font-medium">Nombre Completo</Label>
               <Input
                 id="name"
                 name="name"
@@ -112,10 +112,11 @@ export default function SignUpPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                className="min-h-[44px]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -124,10 +125,11 @@ export default function SignUpPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                className="min-h-[44px]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Teléfono</Label>
+              <Label htmlFor="phone" className="text-sm font-medium">Teléfono</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -136,22 +138,23 @@ export default function SignUpPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
+                className="min-h-[44px]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">Tipo de Cuenta</Label>
+              <Label htmlFor="role" className="text-sm font-medium">Tipo de Cuenta</Label>
               <Select value={formData.role} onValueChange={handleRoleChange}>
-                <SelectTrigger>
+                <SelectTrigger className="min-h-[44px]">
                   <SelectValue placeholder="Selecciona el tipo de cuenta" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-gray-200 shadow-lg">
-                  <SelectItem value="USER" className="bg-white hover:bg-gray-50">Quiero adoptar una mascota</SelectItem>
-                  <SelectItem value="OWNER" className="bg-white hover:bg-gray-50">Quiero dar en adopción</SelectItem>
+                  <SelectItem value="USER" className="bg-white hover:bg-gray-50 py-3">Quiero adoptar una mascota</SelectItem>
+                  <SelectItem value="OWNER" className="bg-white hover:bg-gray-50 py-3">Quiero dar en adopción</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <Label htmlFor="password" className="text-sm font-medium">Contraseña</Label>
               <Input
                 id="password"
                 name="password"
@@ -160,10 +163,11 @@ export default function SignUpPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                className="min-h-[44px]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
+              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirmar Contraseña</Label>
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -172,20 +176,21 @@ export default function SignUpPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
+                className="min-h-[44px]"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 px-6 pb-6 pt-4">
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-orange-500 hover:bg-orange-600 min-h-[44px]"
               disabled={isLoading}
             >
               {isLoading ? "Creando cuenta..." : "Crear Cuenta"}
             </Button>
             <p className="text-sm text-center text-gray-600">
               ¿Ya tienes una cuenta?{" "}
-              <Link href="/auth/signin" className="text-orange-600 hover:text-orange-700">
+              <Link href="/auth/signin" className="text-orange-600 hover:text-orange-700 font-medium">
                 Inicia sesión aquí
               </Link>
             </p>

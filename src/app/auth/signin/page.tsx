@@ -77,16 +77,16 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center">Iniciar Sesión</CardTitle>
-          <CardDescription className="text-center">
+        <CardHeader className="space-y-1 px-6 pt-6">
+          <CardTitle className="text-xl sm:text-2xl text-center">Iniciar Sesión</CardTitle>
+          <CardDescription className="text-center text-sm">
             Ingresa tus credenciales para acceder a tu cuenta
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-6">
             {error && (
               <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md flex items-center space-x-2">
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
@@ -94,7 +94,7 @@ export default function SignInPage() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -102,10 +102,11 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="min-h-[44px]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <Label htmlFor="password" className="text-sm font-medium">Contraseña</Label>
               <Input
                 id="password"
                 type="password"
@@ -113,20 +114,21 @@ export default function SignInPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="min-h-[44px]"
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 px-6 pb-6 pt-4">
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-orange-500 hover:bg-orange-600 min-h-[44px]"
               disabled={isLoading}
             >
               {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
             </Button>
             <p className="text-sm text-center text-gray-600">
               ¿No tienes una cuenta?{" "}
-              <Link href="/auth/signup" className="text-orange-600 hover:text-orange-700">
+              <Link href="/auth/signup" className="text-orange-600 hover:text-orange-700 font-medium">
                 Regístrate aquí
               </Link>
             </p>

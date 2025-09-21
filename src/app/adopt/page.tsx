@@ -255,25 +255,26 @@ export default function AdoptPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto max-w-6xl px-4">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <button
                 onClick={() => router.back()}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                className="p-2 hover:bg-gray-100 rounded-lg touch-manipulation"
+                aria-label="Volver"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <h1 className="text-2xl font-bold text-gray-900">Adoptar una Mascota</h1>
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Adoptar una Mascota</h1>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="outline"
                 onClick={clearFilters}
-                className="hidden sm:flex"
+                className="hidden sm:flex min-h-[40px]"
               >
                 Limpiar Filtros
               </Button>
@@ -282,7 +283,7 @@ export default function AdoptPage() {
         </div>
       </header>
 
-      <div className="container mx-auto max-w-6xl px-4 py-8">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Filters Section */}
         <Card className="mb-8">
           <CardHeader>
@@ -295,9 +296,9 @@ export default function AdoptPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Search */}
-              <div className="space-y-2">
+              <div className="space-y-2 sm:col-span-2 lg:col-span-1">
                 <label className="text-sm font-medium">Buscar</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -305,7 +306,7 @@ export default function AdoptPage() {
                     placeholder="Nombre, raza, descripción..."
                     value={filters.search}
                     onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="pl-10"
+                    className="pl-10 min-h-[44px]"
                   />
                 </div>
               </div>
@@ -314,13 +315,13 @@ export default function AdoptPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Tipo de Mascota</label>
                 <Select value={filters.type} onValueChange={(value) => setFilters(prev => ({ ...prev, type: value }))}>
-                  <SelectTrigger>
+                  <SelectTrigger className="min-h-[44px]">
                     <SelectValue placeholder="Todos los tipos" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Todos los tipos</SelectItem>
+                  <SelectContent className="bg-white border-gray-200 shadow-lg">
+                    <SelectItem value="ALL" className="py-3">Todos los tipos</SelectItem>
                     {Object.entries(petTypeTranslations).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
+                      <SelectItem key={key} value={key} className="py-3">{label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -330,13 +331,13 @@ export default function AdoptPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Tamaño</label>
                 <Select value={filters.size} onValueChange={(value) => setFilters(prev => ({ ...prev, size: value }))}>
-                  <SelectTrigger>
+                  <SelectTrigger className="min-h-[44px]">
                     <SelectValue placeholder="Cualquier tamaño" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ALL">Cualquier tamaño</SelectItem>
+                  <SelectContent className="bg-white border-gray-200 shadow-lg">
+                    <SelectItem value="ALL" className="py-3">Cualquier tamaño</SelectItem>
                     {Object.entries(sizeTranslations).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
+                      <SelectItem key={key} value={key} className="py-3">{label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -346,10 +347,10 @@ export default function AdoptPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Género</label>
                 <Select value={filters.gender} onValueChange={(value) => setFilters(prev => ({ ...prev, gender: value }))}>
-                  <SelectTrigger>
+                  <SelectTrigger className="min-h-[44px]">
                     <SelectValue placeholder="Cualquier género" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white border-gray-200 shadow-lg">
                     <SelectItem value="ALL">Cualquier género</SelectItem>
                     {Object.entries(genderTranslations).map(([key, label]) => (
                       <SelectItem key={key} value={key}>{label}</SelectItem>
@@ -422,13 +423,13 @@ export default function AdoptPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {pets.map((pet) => {
               const IconComponent = petTypeIcons[pet.type as keyof typeof petTypeIcons] || Heart;
               return (
                 <Card key={pet.id} className="hover:shadow-lg transition-shadow overflow-hidden">
                   {/* Image */}
-                  <div className="relative h-48 bg-gray-200">
+                  <div className="relative h-48 sm:h-52 bg-gray-200">
                     {pet.images.length > 0 ? (
                       <img
                         src={pet.images[0].url}
@@ -437,7 +438,7 @@ export default function AdoptPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                        <IconComponent className="w-16 h-16 text-gray-400" />
+                        <IconComponent className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400" />
                       </div>
                     )}
 
@@ -512,7 +513,7 @@ export default function AdoptPage() {
                     </div>
 
                     {/* Owner Info */}
-                    <div className="flex items-center justify-between pt-3 border-t">
+                    <div className="pt-3 border-t space-y-3">
                       <div className="flex items-center space-x-2">
                         <Avatar className="w-6 h-6">
                           <AvatarFallback className="text-xs">
@@ -531,7 +532,8 @@ export default function AdoptPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      {/* Action Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <AdoptPetButton
                           petId={pet.id}
                           petName={pet.name}
@@ -540,13 +542,13 @@ export default function AdoptPage() {
                           ownerName={pet.owner.name}
                           variant="outline"
                           size="sm"
-                          className="bg-red-500 hover:bg-red-600 text-white border-red-500"
+                          className="bg-red-500 hover:bg-red-600 text-white border-red-500 flex-1 min-h-[36px]"
                         />
 
                         <Button
                           size="sm"
                           onClick={() => contactOwner(pet.id, pet.owner.id)}
-                          className="bg-orange-500 hover:bg-orange-600"
+                          className="bg-orange-500 hover:bg-orange-600 flex-1 min-h-[36px]"
                         >
                           <MessageCircle className="w-4 h-4 mr-1" />
                           Contactar

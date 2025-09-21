@@ -80,3 +80,63 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+
+  /* Responsive container utilities */
+  .container-responsive {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply container mx-auto max-w-4xl;
+  }
+
+  .container-wide {
+    @apply container mx-auto max-w-6xl;
+  }
+
+  .container-full {
+    @apply container mx-auto max-w-7xl;
+  }
+
+  /* Responsive padding utilities */
+  .padding-section {
+    @apply py-6 sm:py-8 lg:py-12;
+  }
+
+  .padding-content {
+    @apply py-4 sm:py-6;
+  }
+
+  .padding-small {
+    @apply py-2 sm:py-3;
+  }
+
+  /* Responsive gap utilities */
+  .gap-responsive {
+    @apply gap-4 sm:gap-6;
+  }
+
+  .gap-responsive-lg {
+    @apply gap-6 sm:gap-8;
+  }
+
+  /* Touch-friendly utilities */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] touch-manipulation;
+  }
+
+  .interactive-element {
+    @apply touch-manipulation transition-all duration-200;
+  }
+
+  /* Safe area utilities for mobile */
+  .safe-area-padding-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-padding-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}

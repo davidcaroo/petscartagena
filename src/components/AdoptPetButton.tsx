@@ -212,7 +212,7 @@ export default function AdoptPetButton({
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] bg-white border-gray-200 shadow-lg">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Heart className="w-5 h-5 text-red-500" />

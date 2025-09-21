@@ -164,30 +164,31 @@ export default function ChatPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Chat Header */}
       <div className="bg-white shadow-sm border-b">
-        <div className="container mx-auto max-w-4xl px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+        <div className="px-4 md:px-6 lg:container lg:mx-auto lg:max-w-4xl">
+          <div className="flex items-center justify-between h-14 md:h-16">
+            <div className="flex items-center space-x-3 md:space-x-4 min-w-0 flex-1">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => router.back()}
+                className="touch-target p-2"
               >
                 <ArrowLeft className="w-4 h-4" />
               </Button>
-              <div className="flex items-center space-x-3">
-                <Avatar>
+              <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                <Avatar className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0">
                   <AvatarImage src={otherUser.avatar} />
-                  <AvatarFallback>
+                  <AvatarFallback className="text-sm md:text-base">
                     {otherUser.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <h2 className="font-semibold text-gray-900">{otherUser.name}</h2>
-                  <p className="text-sm text-gray-500">{otherUser.email}</p>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-semibold text-gray-900 text-sm md:text-base truncate">{otherUser.name}</h2>
+                  <p className="text-xs md:text-sm text-gray-500 truncate">{otherUser.email}</p>
                 </div>
               </div>
             </div>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="touch-target p-2 flex-shrink-0">
               <MoreVertical className="w-4 h-4" />
             </Button>
           </div>
@@ -195,11 +196,11 @@ export default function ChatPage() {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <div className="container mx-auto max-w-4xl">
+      <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4">
+        <div className="px-2 md:px-4 lg:container lg:mx-auto lg:max-w-4xl">
           {messages.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">No hay mensajes aún. ¡Comienza la conversación!</p>
+              <p className="text-gray-500 text-sm md:text-base">No hay mensajes aún. ¡Comienza la conversación!</p>
             </div>
           ) : (
             messages.map((message) => (
@@ -211,12 +212,12 @@ export default function ChatPage() {
                   }`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${message.senderId === user?.id
+                  className={`max-w-[280px] sm:max-w-xs lg:max-w-md px-3 md:px-4 py-2 rounded-lg ${message.senderId === user?.id
                     ? "bg-orange-500 text-white"
-                    : "bg-white text-gray-900 shadow-sm"
+                    : "bg-white text-gray-900 shadow-sm border"
                     }`}
                 >
-                  <p className="text-sm">{message.content}</p>
+                  <p className="text-sm break-words">{message.content}</p>
                   <p
                     className={`text-xs mt-1 ${message.senderId === user?.id
                       ? "text-orange-100"
@@ -234,15 +235,15 @@ export default function ChatPage() {
       </div>
 
       {/* Message Input */}
-      <div className="bg-white border-t p-4">
-        <div className="container mx-auto max-w-4xl">
-          <form onSubmit={sendMessage} className="flex space-x-4">
+      <div className="bg-white border-t p-3 md:p-4 safe-area-padding-bottom">
+        <div className="px-2 md:px-4 lg:container lg:mx-auto lg:max-w-4xl">
+          <form onSubmit={sendMessage} className="flex space-x-2 md:space-x-4">
             <Input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Escribe un mensaje..."
-              className="flex-1"
+              className="flex-1 min-h-[44px]"
               onKeyPress={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -252,7 +253,7 @@ export default function ChatPage() {
             />
             <Button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600"
+              className="bg-orange-500 hover:bg-orange-600 touch-target px-3 md:px-4"
               disabled={!newMessage.trim()}
             >
               <Send className="w-4 h-4" />
